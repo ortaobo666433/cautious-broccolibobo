@@ -1,0 +1,4786 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商贸财务系统</title>
+	<!-- 数据库模块 -->
+    <link rel="stylesheet" href="style-1.css">
+	<link rel="stylesheet" href="style-2.css">
+	<link rel="stylesheet" href="style-table.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- 数据库模块 -->
+	<script src="Database-Module.js"></script>
+    <!--账号验证模板-->
+	<script src="User-Verification.js"></script>
+    <!-- 收支功能模块 -->
+    <script src="records-management.js"></script>
+	<!-- 微信功能模块 -->
+    <script src="WeCht-modules.js"></script>
+	<!-- 支付宝功能模块 -->
+    <script src="Alipay-modules.js"></script>
+	<!-- 账单统计功能模块 -->
+    <script src="WeCht-Alipay-statistics.js"></script>
+	<!-- 平台切换功能模块 -->
+	<script src="uni-app.js"></script>
+	<!-- 淘宝订单功能模块 -->
+    <script src="TaoBao-platform-orders.js"></script>
+	<!-- 快手订单功能模块 -->
+	<script src="kuaishou-platform-orders.js"></script>
+	<!-- 抖音订单功能模块 -->
+	<script src="DouYin-platform-orders.js"></script>
+	<!-- 拼多多订单功能模块 -->
+	<script src="PingDuoDuo-platform-orders.js"></script>
+	<!-- 视频号订单功能模块 -->
+	<script src="ShiPingHao-platform-orders.js"></script>
+	<!-- 小红书订单功能模块 -->
+	<script src="XiaoHongShu-platform-orders.js"></script>
+	<!-- 订单汇总功能模块 -->
+	<script src="HuiZong-platform-orders.js"></script>
+	<!-- 直播订单切换功能模块 -->
+	<script src="broadcast-uni-app.js"></script>
+	<!-- 直播记录功能模块 -->
+	<script src="live-records-management.js"></script>
+	<!-- 直播订单分场次功能模块 -->
+	<script src="live-session-analysis.js"></script>
+	<!-- 直播订单分析 -->
+	<script src="live-order-analysis.js"></script>
+	<!-- 主播整体分析 -->
+	<script src="live-records-order.js"></script>
+	<!-- PODetails切换功能模块 -->
+	<script src="PODe-records-order.js"></script>
+	<!-- PODetails聚水潭账单明细功能模块 -->
+	<script src="JSTZDMX-records-order.js"></script>
+	<!-- PODetails店铺财务明细功能模块 -->
+	<script src="DPCWMX-records-order.js"></script>
+	<!-- PODetails分销销售统计功能模块 -->
+	<script src="FXXSTJ-records-order.js"></script>
+	<!-- PODetails聚水潭资金明细功能模块 -->
+	<script src="JSTZJMX-records-order.js"></script>
+	<!-- PODetails物流开支明细功能模块 -->
+	<script src="WLKZMX-records-order.js"></script>
+	<!-- PODetails赠品补发明细功能模块 -->
+	<script src="ZPBFMX-records-order.js"></script>
+	<!-- 账号信息功能模块 -->
+    <script src="account-management.js"></script>
+
+	
+</head>
+<body>
+    <!-- 认证模态框 -->
+    <div class="auth-modal" id="auth-modal">
+        <div class="auth-box">
+            <h2>用户认证</h2>
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="login">登录</button>
+                <button class="auth-tab" data-tab="register">注册</button>
+                <button class="auth-tab" data-tab="change-password">修改密码</button>
+            </div>
+            
+            <!-- 登录表单 -->
+            <div class="auth-content active" id="login">
+                <div class="form-group">
+                    <label for="login-username">用户名</label>
+                    <input type="text" id="login-username" required>
+                    <div class="error-message" id="login-username-error">请输入用户名</div>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">密码</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="login-password" required>
+                        <span class="toggle-password" data-target="login-password">👁</span>
+                    </div>
+                    <div class="error-message" id="login-password-error">请输入密码</div>
+                </div>
+                <div class="error-message" id="login-error"></div>
+                <button id="login-btn">登录</button>
+            </div>
+            
+            <!-- 注册表单 -->
+            <div class="auth-content" id="register">
+                <div class="form-group">
+                    <label for="reg-username">用户名</label>
+                    <input type="text" id="reg-username" required>
+                    <div class="error-message" id="reg-username-error">请输入3-15位用户名</div>
+                </div>
+                <div class="form-group">
+                    <label for="reg-password">密码</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="reg-password" required>
+                        <span class="toggle-password" data-target="reg-password">👁</span>
+                    </div>
+                    <div class="error-message" id="reg-password-error">请输入6-20位密码</div>
+                </div>
+                <div class="form-group">
+                    <label for="reg-confirm-password">确认密码</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="reg-confirm-password" required>
+                        <span class="toggle-password" data-target="reg-confirm-password">👁</span>
+                    </div>
+                    <div class="error-message" id="reg-confirm-error">两次密码不一致</div>
+                </div>
+                <div class="error-message" id="reg-error"></div>
+                <button id="register-btn">注册</button>
+            </div>
+            
+            <!-- 修改密码表单 -->
+            <div class="auth-content" id="change-password">
+                <div class="form-group">
+                    <label for="cp-username">用户名</label>
+                    <input type="text" id="cp-username" required>
+                    <div class="error-message" id="cp-username-error">请输入用户名</div>
+                </div>
+                <div class="form-group">
+                    <label for="cp-old-password">原密码</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="cp-old-password" required>
+                        <span class="toggle-password" data-target="cp-old-password">👁</span>
+                    </div>
+                    <div class="error-message" id="cp-old-error">请输入原密码</div>
+                </div>
+                <div class="form-group">
+                    <label for="cp-new-password">新密码</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="cp-new-password" required>
+                        <span class="toggle-password" data-target="cp-new-password">👁</span>
+                    </div>
+                    <div class="error-message" id="cp-new-error">请输入6-20位新密码</div>
+                </div>
+                <div class="error-message" id="cp-error"></div>
+                <button id="change-password-btn">修改密码</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 主内容区 -->
+    <div class="container" id="main-container">
+    	<header>
+				 <div class="logo">
+					<div class="logo-icon">💰</div>
+					<h1>洁淼商贸财务账单系统</h1>
+				</div>
+				<!-- 用户信息区域 -->
+					<div class="user-info">
+						<!-- 添加用户名显示 -->
+						<span class="user-name-display" id="current-user-display">未登录</span>
+						<div class="user-avatar-dropdown">
+							<!-- 点击触发下拉菜单的头像 -->
+							<div class="user-avatar-trigger" id="user-avatar-trigger">
+								<div class="avatar-display" id="current-user-avatar">
+									<!-- 当前头像会显示在这里 -->
+									<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 100 100">
+										<circle cx="50" cy="50" r="40" fill="#ffdbac" stroke="#e6ccb2" stroke-width="2"/>
+										<path d="M50 10 C20 15, 15 40, 25 60 C20 70, 30 80, 50 80 C70 80, 80 70, 75 60 C85 40, 80 15, 50 10Z" fill="#5d4037"/>
+										<circle cx="38" cy="45" r="3" fill="#212121"/>
+										<circle cx="62" cy="45" r="3" fill="#212121"/>
+										<path d="M38 65 Q50 75, 62 65" fill="none" stroke="#212121" stroke-width="1.5" stroke-linecap="round"/>
+									</svg>
+								</div>
+								<span class="dropdown-arrow">▼</span>
+							</div>
+						
+						<!-- 下拉菜单 -->
+						<div class="user-dropdown-menu" id="user-dropdown-menu">
+							<div class="dropdown-header">
+								<div class="dropdown-avatar" id="dropdown-avatar-preview"></div>
+								<div class="dropdown-userinfo">
+									<strong id="dropdown-username">用户名</strong>
+									<span>已登录</span>
+								</div>
+							</div>
+							
+							<div class="dropdown-divider"></div>
+							
+							<div class="dropdown-items">
+								<a href="javascript:void(0)" class="dropdown-item" id="dropdown-change-avatar">
+									<span class="item-icon">🖼️</span>
+									更换头像
+								</a>
+								<a href="javascript:void(0)" class="dropdown-item" data-tab="account-management">
+									<span class="item-icon">👤</span>
+									账号管理
+								</a>
+								<a href="javascript:void(0)" class="dropdown-item" id="dropdown-backup">
+									<span class="item-icon">💾</span>
+									备份数据
+								</a>
+								<a href="javascript:void(0)" class="dropdown-item" id="dropdown-restore">
+									<span class="item-icon">📥</span>
+									恢复数据
+								</a>
+							</div>
+							
+							<div class="dropdown-divider"></div>
+							
+							<div class="dropdown-items">
+								<a href="javascript:void(0)" class="dropdown-item logout-item" id="dropdown-logout">
+									<span class="item-icon">🚪</span>
+									退出登录
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+		</header>
+        <div class="tabs">
+            <button class="tab active" data-tab="record-management">收支记录</button>
+            <button class="tab" data-tab="summary">收支汇总</button>
+            <button class="tab" data-tab="wechat-bill">微信账单</button>
+            <button class="tab" data-tab="alipay-bill">支付宝账单</button>
+            <button class="tab" data-tab="bill-statistics">账单统计</button>
+            <button class="tab" data-tab="platform-orders">电商订单明细</button>
+			<button class="tab" data-tab="broadcast-orders">直播订单明细(主)</button>
+			<button class="tab" data-tab="Profit-orders">PODetails</button>
+            <button class="tab" data-tab="account-management">账号管理</button>
+        </div>
+        
+		<!-- 收支记录管理面板 -->
+		<div class="tab-content active" id="record-management">
+			<!-- 批量导入区域 -->
+			<div class="import-section">
+				<p>通过CSV或XLSX文件批量导入多条收支记录，支持收入和支出两种类型，建议先下载模板并按格式填写。</p>
+				
+				<div class="import-top-row">
+					<div class="import-left-column">
+						<div class="file-input-wrapper">
+							<label for="file-import" class="file-label">选择文件 (CSV/XLSX)</label>
+							<input type="file" id="file-import" accept=".csv,.xlsx,.xls">
+							<span class="file-name" id="file-name">未选择文件</span>
+						</div>
+						
+						<div class="import-button-group">
+							<button class="import-btn" id="import-btn" disabled>导入记录</button>
+							<button class="export-btn" id="download-template-csv">下载CSV模板</button>
+							<button class="export-btn" id="download-template-xlsx">下载XLSX模板</button>
+						</div>
+					</div>
+					
+					<div class="import-right-column">
+						<div class="import-help">
+							<h4>导入说明：</h4>
+							<ul>
+								<li>支持导入"收入"和"支出"两种类型，需在文件中明确指定</li>
+								<li>日期格式支持：YYYY-MM-DD 或 YYYY/MM/DD</li>
+								<li>金额必须为数字，且大于0</li>
+								<li>支出类别：餐饮、交通、购物、住房、娱乐、医疗、教育、其他</li>
+								<li>收入类别：工资、奖金、投资、兼职、报销、其他</li>
+								<li>收支去向：现金、银行卡、支付宝、微信支付、信用卡、其他</li>
+								<li>备注为可选内容</li>
+								<li>模板中的示例数据可直接替换，请勿修改表头</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				
+				<!-- 进度条 -->
+				<div class="progress-container" id="progress-container" style="display: none;">
+					<div class="progress-bar">
+						<div class="progress-fill" id="progress-fill"></div>
+					</div>
+					<div class="progress-text" id="progress-text">0%</div>
+					<div class="progress-details" id="progress-details"></div>
+				</div>
+				
+				<div class="import-result" id="import-result">
+					<div id="import-result-text"></div>
+					<div class="import-errors" id="import-errors"></div>
+				</div>
+			</div>
+			
+			<!-- 添加记录区域 -->
+			<div class="record-section">
+				<h3>添加新记录</h3>
+				<form id="record-form">
+					<div class="filter-row">
+						<div class="form-group">
+							<label>时间（不填则使用当前时间）</label>
+							<div class="time-inputs">
+								<input type="date" id="record-date">
+								<input type="time" id="record-time" step="60">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="type">类型</label>
+							<select id="type" required>
+								<option value="expense">支出</option>
+								<option value="income">收入</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="person">收支人</label>
+							<input type="text" id="person" placeholder="请输入收支人姓名" required>
+							<div class="autocomplete-dropdown" id="add-person-dropdown"></div>
+						</div>
+						<div class="form-group">
+							<label for="amount">金额 (元)</label>
+							<input type="number" id="amount" step="0.01" min="0.01" required>
+						</div>
+						<div class="form-group">
+							<label for="category">类别</label>
+							<select id="category" required>
+								<!-- 选项会根据类型动态更新 -->
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="destination">收支去向</label>
+							<select id="destination">
+								<option value="现金">现金</option>
+								<option value="银行卡">银行卡</option>
+								<option value="支付宝">支付宝</option>
+								<option value="微信支付">微信支付</option>
+								<option value="信用卡">信用卡</option>
+								<option value="其他">其他</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="description">备注</label>
+						<textarea id="description" rows="2" placeholder="可选备注信息"></textarea>
+					</div>
+					<button type="submit" class="primary-btn">保存记录</button>
+				</form>
+			</div>
+			
+			<!-- 记录查询和显示区域 -->
+			<div class="records-section">
+				<h3>收支记录查询与浏览</h3>
+				
+				<!-- 统计信息 -->
+				<div class="filter-row">
+					<div class="stat-card">
+						<div class="stat-label">总记录数</div>
+						<div class="stat-value" id="account-record-count">0</div>
+					</div>
+					<div class="stat-card">
+						<div class="stat-label">总收入</div>
+						<div class="stat-value income" id="total-income">0.00</div>
+					</div>
+					<div class="stat-card">
+						<div class="stat-label">总支出</div>
+						<div class="stat-value expense" id="total-expense">0.00</div>
+					</div>
+					<div class="stat-card">
+						<div class="stat-label">净收入</div>
+						<div class="stat-value" id="net-income">0.00</div>
+					</div>
+				</div>
+				
+				<!-- 查询筛选 -->
+				<div class="search-filters">
+					<div class="filter-row">
+						<div class="filter-group">
+							<label for="search-person">收支人</label>
+							<input type="text" id="search-person" placeholder="输入收支人姓名">
+							<div class="autocomplete-dropdown" id="search-person-dropdown"></div>
+						</div>
+						<div class="filter-group">
+							<label for="search-category">类别</label>
+							<select id="search-category">
+								<option value="">所有类别</option>
+								<option value="餐饮">餐饮</option>
+								<option value="交通">交通</option>
+								<option value="购物">购物</option>
+								<option value="住房">住房</option>
+								<option value="娱乐">娱乐</option>
+								<option value="医疗">医疗</option>
+								<option value="教育">教育</option>
+								<option value="工资">工资</option>
+								<option value="奖金">奖金</option>
+								<option value="投资">投资</option>
+								<option value="兼职">兼职</option>
+								<option value="报销">报销</option>
+								<option value="其他">其他</option>
+							</select>
+						</div>
+						<div class="filter-group">
+							<label for="search-destination">收支去向</label>
+							<select id="search-destination">
+								<option value="">所有去向</option>
+								<option value="现金">现金</option>
+								<option value="银行卡">银行卡</option>
+								<option value="支付宝">支付宝</option>
+								<option value="微信支付">微信支付</option>
+								<option value="信用卡">信用卡</option>
+								<option value="其他">其他</option>
+							</select>
+						</div>
+						<div class="filter-group">
+							<label for="search-amount-min">最小金额</label>
+							<input type="number" id="search-amount-min" step="0.01" min="0" placeholder="0.00">
+						</div>
+						<div class="filter-group">
+							<label for="search-amount-max">最大金额</label>
+							<input type="number" id="search-amount-max" step="0.01" min="0" placeholder="不限">
+						</div>
+						<div class="filter-group">
+							<label for="search-date-start">开始日期</label>
+							<input type="date" id="search-date-start">
+						</div>
+						<div class="filter-group">
+							<label for="search-date-end">结束日期</label>
+							<input type="date" id="search-date-end">
+						</div>
+						<div class="filter-group full-width">
+							<label for="search-description">备注包含</label>
+							<input type="text" id="search-description" placeholder="输入备注关键词">
+						</div>
+					</div>
+					<div class="action-buttons">
+						<button id="search-btn" class="reset-btn">
+							<span>🔍</span> 查询
+						</button>
+						<button class="reset-btn" id="reset-btn">
+							<span>🔄</span> 重置
+						</button>
+							<button class="export-btn" id="export-records">
+								<span>📥</span> 导出所有记录
+							</button>
+							<button class="export-btn" id="export-filtered">
+								<span>📥</span> 导出查询结果
+							</button>
+					</div>
+				</div>
+				
+				<!-- 记录控制栏 -->
+				<div class="records-controls-1">
+					<div class="left-controls">
+						<div class="select-all-container">
+							<label for="record-count">每页显示</label>
+							<select id="record-count"  style="width: 100px; text-align: center;">
+								<option value="10">10条</option>
+								<option value="20">20条</option>
+								<option value="50">50条</option>
+								<option value="100">100条</option>
+							</select>
+							<label>
+								<input type="checkbox" id="select-all"> 全选当前页
+							</label>
+							<label style="margin-left: 15px;">
+								<input type="checkbox" id="select-all-pages"> 全选所有页 (<span id="selected-count">0</span>)
+							</label>
+							<button class="bulk-delete-btn" id="bulk-delete-btn" disabled>
+								<span>🗑️</span> 批量删除选中记录
+							</button>
+						</div>
+					</div>
+				</div>
+				
+				<!-- 记录表格 -->
+				<div class="records-table-container">
+					<table id="records-table">
+						<thead>
+							<tr>
+								<th width="40">
+									<input type="checkbox" id="table-select-all">
+								</th>
+								<th>日期时间</th>
+								<th>收支人</th>
+								<th>类型</th>
+								<th>金额</th>
+								<th>类别</th>
+								<th>收支去向</th>
+								<th>备注</th>
+								<th width="80">操作</th>
+							</tr>
+						</thead>
+						<tbody id="records-body">
+							<!-- 记录会在这里动态显示 -->
+							<tr>
+								<td colspan="9" style="text-align:center; color:#999; padding:20px;">
+									暂无收支记录，请添加记录或导入数据
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				
+				<!-- 分页控制 -->
+				<div class="pagination">
+					<button id="page-prev" disabled>上一页</button>
+					<span id="pagination-info">共 0 条记录</span>
+					<span class="pagination-info" id="shop-finance-page-info">第 1 页，共 1 页</span>
+					<button id="page-next" disabled>下一页</button>
+					<div class="page-jump">
+						<input type="number" id="page-jump" min="1" placeholder="页码" style="width: 60px; padding: 8px; text-align: center;">
+						<button id="page-jump-btn">跳转</button>
+					</div>
+				</div>
+			</div>
+		</div>
+        
+        <!-- 收支汇总面板（折线图） -->
+        <div class="tab-content" id="summary">
+            <div class="chart-controls">
+                <div class="filter-group">
+                    <label for="summary-year">选择年份：</label>
+                    <select id="summary-year">
+                        <option value="all">全部年份</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="summary-person">选择收支人：</label>
+                    <select id="summary-person">
+                        <option value="all">所有收支人</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="monthlyChart"></canvas>
+            </div>
+            
+			<div class="summary">
+				<div class="summary-item">
+					<strong>总收入：</strong> <span id="summary-total-income">0.00</span> 元
+				</div>
+				<div class="summary-item">
+					<strong>总支出：</strong> <span id="summary-total-expense">0.00</span> 元
+				</div>
+				<div class="summary-item">
+					<strong>结余：</strong> <span id="summary-balance">0.00</span> 元
+				</div>
+			</div>
+            
+            <!-- 收支人统计 -->
+            <h3>收支人统计</h3>
+            <table id="person-summary">
+                <thead>
+                    <tr>
+                        <th>收支人</th>
+                        <th>总收入</th>
+                        <th>总支出</th>
+                        <th>结余</th>
+                    </tr>
+                </thead>
+                <tbody id="person-summary-body">
+                </tbody>
+            </table>
+            
+            <h3>支出分类统计</h3>
+            <table id="expense-category">
+                <thead>
+                    <tr>
+                        <th>类别</th>
+                        <th>总金额</th>
+                    </tr>
+                </thead>
+                <tbody id="expense-body">
+                </tbody>
+            </table>
+            
+            <h3>收入分类统计</h3>
+            <table id="income-category">
+                <thead>
+                    <tr>
+                        <th>类别</th>
+                        <th>总金额</th>
+                    </tr>
+                </thead>
+                <tbody id="income-body">
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 微信账单面板 -->
+        <div class="tab-content" id="wechat-bill">
+            <!-- 微信账单导入区域 -->
+            <div class="import-section">
+				<p>支持导入微信账单CSV或XLSX文件（从微信钱包-账单-右上角导出），自动识别表头字段，无需手动调整格式。</p>
+				<div class="import-top-row">
+					<div class="import-left-column">
+						<div class="file-input-wrapper">
+							<label for="wechat-file-import" class="file-label">选择微信账单文件 (CSV/XLSX)</label>
+							<input type="file" id="wechat-file-import" accept=".csv,.xlsx,.xls">
+							<span class="file-name" id="wechat-file-name">未选择文件</span>
+						</div>
+						
+						<div class="action-buttons">
+							<button class="btn-success" id="wechat-import-btn" disabled>
+								<span>📥</span> 导入微信账单
+							</button>
+							<button class="btn-warning" id="wechat-download-template">
+								<span>📋</span> 下载微信账单模板
+							</button>
+						</div>
+					</div>
+					
+					<div class="import-right-column">
+						<div class="import-help" style="margin-top: 15px;">
+							<h4>微信账单导出说明：</h4>
+							<ul style="margin-left: 20px;">
+								<li>打开微信 → 我 → 支付 → 钱包 → 账单 → 右上角「导出账单」</li>
+								<li>选择「用于个人对账」，获取CSV格式账单文件</li>
+								<li>支持格式：CSV、XLSX、XLS</li>
+							</ul>
+						</div>
+					</div>
+                </div>
+                <div class="import-result" id="wechat-import-result">
+                    <div id="wechat-import-result-text"></div>
+                    <div class="import-errors" id="wechat-import-errors"></div>
+                </div>
+            </div>
+            
+            <!-- 微信账单查询区域 -->
+            <div class="search-filters">
+                <h3>微信账单查询</h3>
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="wechat-search-time">交易时间范围</label>
+                        <input type="date" id="wechat-search-time-start"> 
+                        <span style="margin: 0 10px;">至</span>
+                        <input type="date" id="wechat-search-time-end">
+                    </div>
+                    <div class="filter-group">
+                        <label for="wechat-search-type">交易类型</label>
+                        <input type="text" id="wechat-search-type" placeholder="如：转账、消费、红包">
+                    </div>
+                    <div class="filter-group">
+                        <label for="wechat-search-counterparty">交易对方</label>
+                        <input type="text" id="wechat-search-counterparty" placeholder="输入对方名称">
+                    </div>
+                </div>
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="wechat-search-inout">收/支类型</label>
+                        <select id="wechat-search-inout">
+                            <option value="">全部</option>
+                            <option value="收入">收入</option>
+                            <option value="支出">支出</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="wechat-search-amount">金额范围 (元)</label>
+                        <input type="number" id="wechat-search-amount-min" step="0.01" min="0" placeholder="最小"> 
+                        <span style="margin: 0 10px;">至</span>
+                        <input type="number" id="wechat-search-amount-max" step="0.01" min="0" placeholder="最大">
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="reset-btn" id="wechat-search-btn">
+                        <span>🔍</span> 查询
+                    </button>
+                    <button class="reset-btn" id="wechat-reset-search">
+                        <span>🔄</span> 重置
+                    </button>
+                    <button class="btn-success" id="wechat-export-filtered">
+                        <span>📤</span> 导出查询结果
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 微信账单批量操作区域 -->
+			<div class="select-all-container">
+				<div class="select-all-options">
+					<div class="select-all-option">
+						<input type="checkbox" id="wechat-select-all-pages"> 
+						<label for="wechat-select-all-pages">全选所有页账单</label>
+					</div>
+					<div class="select-all-option">
+						<input type="checkbox" id="wechat-select-all"> 
+						<label for="wechat-select-all">全选当前页账单</label>
+					</div>
+					<span style="margin-left: 15px; color: #6c757d;">
+						已选择 <span id="wechat-selected-count">0</span> 条记录
+					</span>
+				</div>
+				<button class="btn-danger" id="wechat-bulk-delete-btn" disabled>
+					<span>🗑️</span> 批量删除选中账单
+				</button>
+			</div>
+            
+            <!-- 微信账单表格 -->
+            <div style="overflow-x: auto;">
+                <table id="wechat-bill-table">
+                    <thead>
+                        <tr>
+                            <th width="40">
+                                <input type="checkbox" id="wechat-table-select-all">
+                            </th>
+                            <th>交易时间</th>
+                            <th>交易类型</th>
+                            <th>交易对方</th>
+                            <th>商品</th>
+                            <th>收/支</th>
+                            <th>金额(元)</th>
+                            <th>支付方式</th>
+                            <th>当前状态</th>
+                            <th>交易单号</th>
+                            <th>商户单号</th>
+                            <th>备注</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="wechat-bill-body">
+                        <tr><td colspan="13" style="text-align:center">暂无微信账单数据</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- 微信账单分页 -->
+            <div class="pagination" id="wechat-pagination">
+                <button id="wechat-prev-page" disabled>上一页</button>
+                <span class="pagination-info" id="wechat-page-info">第 1 页，共 1 页</span>
+                <button id="wechat-next-page" disabled>下一页</button>
+				<!-- 添加跳转功能 -->
+				<div class="page-jump">
+					<input type="number" id="wechat-jump-page" min="1" placeholder="页码" style="width: 60px; padding: 8px; text-align: center;">
+					<button id="wechat-jump-btn">跳转</button>
+				</div>
+            </div>
+        </div>
+        
+        <!-- 支付宝账单面板 -->
+        <div class="tab-content" id="alipay-bill">
+            <!-- 支付宝账单导入区域 -->
+			<!-- 添加进度条容器 -->
+			<div class="progress-container" id="alipay-progress-container" style="display: none; margin: 15px 0;">
+				<div class="progress-bar">
+					<div class="progress-fill" id="alipay-progress-fill" style="width: 0%;"></div>
+				</div>
+				<div class="progress-text" id="alipay-progress-text">0%</div>
+					<div class="progress-details" id="alipay-progress-details">正在准备导入...</div>
+			</div>
+            <div class="import-section">
+                <p>支持导入支付宝账单CSV或XLSX文件（从支付宝-我的-账单-右上角设置-开具交易流水证明导出），自动识别表头字段。</p>
+				<div class="import-top-row">
+					<div class="import-left-column">
+						<div class="file-input-wrapper">
+							<label for="alipay-file-import" class="file-label">选择支付宝账单文件 (CSV/XLSX)</label>
+							<input type="file" id="alipay-file-import" accept=".csv,.xlsx,.xls">
+							<span class="file-name" id="alipay-file-name">未选择文件</span>
+						</div>
+						
+						<div class="action-buttons">
+							<button class="btn-success" id="alipay-import-btn" disabled>
+								<span>📥</span> 导入支付宝账单
+							</button>
+							<button class="btn-warning" id="alipay-download-template">
+								<span>📋</span> 下载支付宝账单模板
+							</button>
+						</div>
+					</div>
+					<div class="import-right-column">
+						<div class="import-help" style="margin-top: 15px;">
+							<h4>支付宝账单导出说明：</h4>
+							<ul style="margin-left: 20px;">
+								<li>打开支付宝 → 我的 → 账单 → 右上角设置 → 开具交易流水证明</li>
+								<li>选择时间范围，获取CSV或Excel格式账单文件</li>
+								<li><strong>推荐使用XLSX格式</strong>：避免编码问题和日期格式错误</li>
+								<li>支持格式：CSV、XLSX、XLS</li>
+							</ul>
+						</div>
+					</div>
+					<div class="import-result" id="alipay-import-result">
+						<div id="alipay-import-result-text"></div>
+						<div class="import-errors" id="alipay-import-errors"></div>
+					</div>
+				</div>
+            </div>
+            
+            <!-- 支付宝账单查询区域 -->
+            <div class="search-filters">
+                <h3>支付宝账单查询</h3>
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="alipay-search-time">发生时间范围</label>
+                        <input type="date" id="alipay-search-time-start"> 
+                        <span style="margin: 0 10px;">至</span>
+                        <input type="date" id="alipay-search-time-end">
+                    </div>
+                    <div class="filter-group">
+                        <label for="alipay-search-counterparty">对方账号</label>
+                        <input type="text" id="alipay-search-counterparty" placeholder="输入对方账号名称">
+                    </div>
+                    <div class="filter-group">
+                        <label for="alipay-search-goods">商品名称</label>
+                        <input type="text" id="alipay-search-goods" placeholder="输入商品名称关键词">
+                    </div>
+                </div>
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="alipay-search-amount">金额范围 (元)</label>
+                        <input type="number" id="alipay-search-amount-min" step="0.01" min="0" placeholder="最小"> 
+                        <span style="margin: 0 10px;">至</span>
+                        <input type="number" id="alipay-search-amount-max" step="0.01" min="0" placeholder="最大">
+                    </div>
+                    <div class="filter-group">
+                        <label for="alipay-search-type">业务类型</label>
+                        <input type="text" id="alipay-search-type" placeholder="如：消费、转账、还款">
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="reset-btn" id="alipay-search-btn">
+                        <span>🔍</span> 查询
+                    </button>
+                    <button class="reset-btn" id="alipay-reset-search">
+                        <span>🔄</span> 重置
+                    </button>
+                    <button class="btn-success" id="alipay-export-filtered">
+                        <span>📤</span> 导出查询结果
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 支付宝账单批量操作区域 -->
+			<div class="select-all-container">
+				<div class="select-all-options">
+					<div class="select-all-option">
+						<input type="checkbox" id="alipay-select-all-pages"> 
+						<label for="alipay-select-all-pages">全选所有页账单</label>
+					</div>
+					<div class="select-all-option">
+						<input type="checkbox" id="alipay-select-all"> 
+						<label for="alipay-select-all">全选当前页账单</label>
+					</div>
+					<span style="margin-left: 15px; color: #6c757d;">
+						已选择 <span id="alipay-selected-count">0</span> 条记录
+					</span>
+				</div>
+				<button class="btn-danger" id="alipay-bulk-delete-btn" disabled>
+					<span>🗑️</span> 批量删除选中账单
+				</button>
+			</div>
+            
+            <!-- 支付宝账单表格 -->
+            <div style="overflow-x: auto;">
+                <table id="alipay-bill-table">
+                    <thead>
+                        <tr>
+                            <th width="40">
+                                <input type="checkbox" id="alipay-table-select-all">
+                            </th>
+                            <th>账务流水号</th>
+                            <th>业务流水号</th>
+                            <th>商户订单号</th>
+                            <th>商品名称</th>
+                            <th>发生时间</th>
+                            <th>对方账号</th>
+                            <th>收入金额（+元）</th>
+                            <th>支出金额（-元）</th>
+                            <th>账户余额（元）</th>
+                            <th>交易渠道</th>
+                            <th>业务类型</th>
+                            <th>备注</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="alipay-bill-body">
+                        <tr><td colspan="14" style="text-align:center">暂无支付宝账单数据</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- 支付宝账单分页 -->
+            <div class="pagination" id="alipay-pagination">
+                <button id="alipay-prev-page" disabled>上一页</button>
+                <span class="pagination-info" id="alipay-page-info">第 1 页，共 1 页</span>
+                <button id="alipay-next-page" disabled>下一页</button>
+				<!-- 添加跳转功能 -->
+				<div class="page-jump">
+					<input type="number" id="alipay-jump-page" min="1" placeholder="页码" style="width: 60px; padding: 8px; text-align: center;">
+					<button id="alipay-jump-btn">跳转</button>
+				</div>
+            </div>
+        </div>
+        
+        <!-- 账单统计面板 -->
+        <div class="tab-content" id="bill-statistics">
+            <!-- 统计控制区域 -->
+            <div class="chart-controls">
+                <div class="filter-group">
+                    <label for="bill-stat-year">选择年份：</label>
+                    <select id="bill-stat-year">
+                        <option value="all">全部年份</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="bill-stat-type">账单类型：</label>
+                    <select id="bill-stat-type">
+                        <option value="all">全部账单</option>
+                        <option value="wechat">微信账单</option>
+                        <option value="alipay">支付宝账单</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="bill-stat-chart-type">图表类型：</label>
+                    <select id="bill-stat-chart-type">
+                        <option value="line">折线图</option>
+                        <option value="bar">柱状图</option>
+                        <option value="pie">饼图</option>
+                    </select>
+                </div>
+                <div style="width: 150px; text-align: center;">
+                    <label>&nbsp;</label>
+                    <button class="reset-btn" id="refresh-stats">
+                        <span>🔄</span> 刷新
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 月度趋势图 -->
+            <h3>月度收支趋势</h3>
+            <div class="chart-container">
+                <canvas id="billMonthlyChart"></canvas>
+            </div>
+            
+            <!-- 账单类型统计 -->
+            <h3>账单统计概览</h3>
+            <div class="summary-cards">
+                <div class="summary-card wechat">
+                    <h4><span>💚</span> 微信账单统计</h4>
+                    <div class="summary-item">
+                        <strong>总交易笔数：</strong> <span id="wechat-total-count">0</span> 笔
+                    </div>
+                    <div class="summary-item">
+                        <strong>总收入：</strong> <span id="wechat-total-income">0.00</span> 元
+                    </div>
+                    <div class="summary-item">
+                        <strong>总支出：</strong> <span id="wechat-total-expense">0.00</span> 元
+                    </div>
+                    <div class="summary-item">
+                        <strong>净收入：</strong> <span id="wechat-net-income" class="positive">0.00</span> 元
+                    </div>
+                </div>
+                
+                <div class="summary-card alipay">
+                    <h4><span>💙</span> 支付宝账单统计</h4>
+                    <div class="summary-item">
+                        <strong>总交易笔数：</strong> <span id="alipay-total-count">0</span> 笔
+                    </div>
+                    <div class="summary-item">
+                        <strong>总收入：</strong> <span id="alipay-total-income">0.00</span> 元
+                    </div>
+                    <div class="summary-item">
+                        <strong>总支出：</strong> <span id="alipay-total-expense">0.00</span> 元
+                    </div>
+                    <div class="summary-item">
+                        <strong>净收入：</strong> <span id="alipay-net-income" class="positive">0.00</span> 元
+                    </div>
+                </div>
+                
+                <div class="summary-card">
+                    <h4><span>💰</span> 合并统计</h4>
+                    <div class="summary-item">
+                        <strong>总交易笔数：</strong> <span id="total-bill-count">0</span> 笔
+                    </div>
+                    <div class="summary-item">
+                        <strong>总收入：</strong> <span id="total-bill-income">0.00</span> 元
+                    </div>
+                    <div class="summary-item">
+                        <strong>总支出：</strong> <span id="total-bill-expense">0.00</span> 元
+                    </div>
+                    <div class="summary-item">
+                        <strong>净收入：</strong> <span id="total-bill-net" class="positive">0.00</span> 元
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 分类统计 -->
+            <div class="statistics-row">
+                <div class="statistics-column">
+                    <h3>微信交易类型统计</h3>
+                    <div class="chart-container" style="height: 300px;">
+                        <canvas id="wechatTypeChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="statistics-column">
+                    <h3>支付宝业务类型统计</h3>
+                    <div class="chart-container" style="height: 300px;">
+                        <canvas id="alipayTypeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 交易对方统计 -->
+            <div class="statistics-row">
+                <div class="statistics-column">
+                    <h3>微信交易对方TOP10</h3>
+                    <div class="chart-container" style="height: 400px;">
+                        <canvas id="wechatCounterpartyChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="statistics-column">
+                    <h3>支付宝交易对方TOP10</h3>
+                    <div class="chart-container" style="height: 400px;">
+                        <canvas id="alipayCounterpartyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 详细统计表格 -->
+            <h3>详细月度统计</h3>
+            <div style="overflow-x: auto;">
+                <table id="bill-detail-stat">
+                    <thead>
+                        <tr>
+                            <th>月份</th>
+                            <th>微信收入</th>
+                            <th>微信支出</th>
+                            <th>微信净收入</th>
+                            <th>支付宝收入</th>
+                            <th>支付宝支出</th>
+                            <th>支付宝净收入</th>
+                            <th>总收入</th>
+                            <th>总支出</th>
+                            <th>总净收入</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bill-detail-body">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- 平台订单明细面板 -->
+        <div class="tab-content" id="platform-orders">
+            <div class="platform-tabs">
+                <button class="platform-tab active" data-platform="taobao-orders">淘宝订单</button>
+                <button class="platform-tab" data-platform="kuaishou-orders">快手订单</button>
+				<button class="platform-tab" data-platform="douyin-orders">抖音订单</button>
+				<button class="platform-tab" data-platform="pingduoduo-orders">拼多多订单</button>
+				<button class="platform-tab" data-platform="shipinghao-orders">视频号订单</button>
+				<button class="platform-tab" data-platform="xiaohongshu-orders">小红书订单</button>
+				<button class="platform-tab" data-platform="huizong-orders">平台订单汇总</button>				
+            </div>
+            
+            <!-- 淘宝订单子面板 -->
+            <div class="platform-content active" id="taobao-orders">
+                <!-- 淘宝订单导入区域 -->
+				<div class="progress-container" id="taobao-progress-container" style="display: none; margin: 15px 0;">
+					<div class="progress-bar">
+						<div class="progress-fill" id="taobao-progress-fill" style="width: 0%;"></div>
+					</div>
+					<div class="progress-text" id="taobao-progress-text">0%</div>
+					<div class="progress-details" id="taobao-progress-details">正在准备导入...</div>
+				</div>
+                <div class="import-section">
+                    <p>支持导入淘宝订单CSV或XLSX文件（从淘宝卖家中心-已卖出的宝贝-导出），自动匹配淘宝订单表头字段。</p>
+					<div class="import-top-row">
+						<div class="import-left-column">
+							<div class="form-group">
+								<label for="taobao-shop-select">选择店铺</label>
+								<select id="taobao-shop-select" required>
+									<option value="依雨梦莎">依雨梦莎</option>
+									<option value="淘大胆">淘大胆</option>
+									<option value="春城的味道">春城的味道</option>
+								</select>
+							</div>
+							
+							<div class="file-input-wrapper">
+								<label for="taobao-file-import" class="file-label">选择淘宝订单文件 (CSV/XLSX)</label>
+								<input type="file" id="taobao-file-import" accept=".csv,.xlsx,.xls">
+								<span class="file-name" id="taobao-file-name">未选择文件</span>
+							</div>
+						
+							<div class="action-buttons">
+								<button class="btn-success" id="taobao-import-btn" disabled>
+									<span>📥</span> 导入淘宝订单
+								</button>
+								<button class="btn-warning" id="taobao-download-template">
+									<span>📋</span> 下载淘宝订单模板
+								</button>
+							</div>
+						</div>
+						
+						<div class="import-right-column">
+							<div class="import-help"style="margin-top: 15px;">
+								<h4>淘宝订单导出说明：</h4>
+								<ul>
+									<li>登录淘宝卖家中心 → 交易 → 已卖出的宝贝</li>
+									<li>选择时间范围，点击"导出"按钮</li>
+									<li>选择"生成报表"，下载CSV或Excel格式文件</li>
+									<li>支持店铺：依雨梦莎、淘大胆、春城的味道</li>
+								</ul>
+							</div>
+						</div>
+						<div class="import-result" id="taobao-import-result">
+							<div id="taobao-import-result-text"></div>
+							<div class="import-errors" id="taobao-import-errors"></div>
+						</div>
+					</div>
+				</div>
+                <!-- 淘宝订单查询区域 -->
+                <div class="search-filters">
+                    <h4>淘宝订单查询</h4>
+					<div class="filter-row">
+						<div class="filter-group">
+							<label for="taobao-search-time">订单创建时间范围</label>
+							<input type="date" id="taobao-search-time-start"> - 
+							<input type="date" id="taobao-search-time-end">
+						</div>
+						<div class="filter-group">
+							<label for="taobao-search-order-no">订单编号</label>
+							<input type="text" id="taobao-search-order-no" placeholder="主订单或子订单编号">
+						</div>
+						<div class="filter-group">
+							<label for="taobao-search-payment-no">支付单号</label>
+							<input type="text" id="taobao-search-payment-no" placeholder="支付单号">
+						</div>
+						<div class="filter-group">
+							<label for="taobao-search-product">商品标题</label>
+							<input type="text" id="taobao-search-product" placeholder="输入商品标题关键词">
+						</div>
+					</div>
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label for="taobao-search-refund-status">退款状态</label>
+                            <select id="taobao-search-refund-status">
+                                <option value="">全部</option>
+                                <option value="退款成功">退款成功</option>
+                                <option value="退款关闭">退款关闭</option>
+                                <option value="没有申请退款">没有申请退款</option>
+                                <option value="退款中">退款中</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="taobao-search-status">订单状态</label>
+                            <select id="taobao-search-status">
+                                <option value="">全部</option>
+                                <option value="等待买家付款">等待买家付款</option>
+                                <option value="买家已付款">买家已付款</option>
+                                <option value="卖家已发货">卖家已发货</option>
+                                <option value="交易成功">交易成功</option>
+                                <option value="交易关闭">交易关闭</option>
+                                <option value="退款中">退款中</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="taobao-search-amount">金额范围 (元)</label>
+                            <input type="number" id="taobao-search-amount-min" step="0.01" min="0" placeholder="最小"> - 
+                            <input type="number" id="taobao-search-amount-max" step="0.01" min="0" placeholder="最大">
+                        </div>
+                        <div class="filter-group">
+                            <label for="taobao-search-shop">店铺</label>
+                            <select id="taobao-search-shop">
+                                <option value="">全部</option>
+                                <option value="依雨梦莎">依雨梦莎</option>
+                                <option value="淘大胆">淘大胆</option>
+                                <option value="春城的味道">春城的味道</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+						<button class="reset-btn" id="taobao-search-btn">
+							<span>🔍</span> 查询
+						</button>
+						<button class="reset-btn" id="taobao-reset-search">
+							<span>🔄</span> 重置
+						</button>
+                        <button class="export-btn" id="taobao-export-filtered">导出查询结果 (CSV)</button>
+                    </div>
+                </div>
+                
+                <!-- 淘宝订单批量删除功能区 -->
+				<div class="select-all-container">
+					<div class="select-all-options">
+						<div class="select-all-option">
+							<input type="checkbox" id="taobao-select-all-pages"> 
+							<label for="taobao-select-all-pages">全选所有页订单</label>
+						</div>
+						<div class="select-all-option">
+							<input type="checkbox" id="taobao-select-all"> 
+							<label for="taobao-select-all">全选当前页订单</label>
+						</div>
+						<span style="margin-left: 15px; color: #6c757d;">
+							已选择 <span id="taobao-selected-count">0</span> 条记录
+						</span>
+					</div>
+					<button class="bulk-delete-btn" id="taobao-bulk-delete-btn" disabled>批量删除选中订单</button>
+				</div>
+                
+                <!-- 淘宝订单表格 -->
+                <div class="records">
+                    <table id="taobao-orders-table">
+						<thead>
+							<tr>
+								<th width="40">选择</th>
+								<th>子订单编号</th>
+								<th>主订单编号</th>
+								<th>标题</th>
+								<th>价格</th>
+								<th>购买数量</th>
+								<th>外部系统编号</th>
+								<th>商品属性</th>
+								<th>套餐信息</th>
+								<th>联系方式备注</th>
+								<th>备注标签</th>
+								<th>商家备注</th>
+								<th>订单状态</th>
+								<th>商家编码</th>
+								<th>支付单号</th>
+								<th>买家应付货款</th>
+								<th>买家实际支付金额</th>
+								<th>退款状态</th>
+								<th>退款金额</th>
+								<th>订单创建时间</th>
+								<th>订单付款时间</th>
+								<th>店铺</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+                        <tbody id="taobao-orders-body">
+                            <tr><td colspan="23" style="text-align:center">暂无淘宝订单数据</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+				<div class="pagination" id="taobao-pagination">
+					<button id="taobao-prev-page" disabled>上一页</button>
+					<span class="pagination-info" id="taobao-page-info">第 1 页，共 1 页</span>
+					<button id="taobao-next-page" disabled>下一页</button>
+					<div class="page-jump">
+						<input type="number" id="taobao-jump-page" min="1" placeholder="页码" style="width: 60px; padding: 8px; text-align: center;">
+						<button id="taobao-jump-btn">跳转</button>
+					</div>
+				</div>
+            </div>
+            
+            <!-- 快手订单面板 -->
+			<div class="platform-content" id="kuaishou-orders">
+				<!-- 快手订单导入区域 -->
+				<div class="progress-container" id="kuaishou-progress-container" style="display: none; margin: 15px 0;">
+					<div class="progress-bar">
+						<div class="progress-fill" id="kuaishou-progress-fill" style="width: 0%;"></div>
+					</div>
+					<div class="progress-text" id="kuaishou-progress-text">0%</div>
+					<div class="progress-details" id="kuaishou-progress-details">正在准备导入...</div>
+				</div>
+				<div class="import-section">
+					<p>支持导入快手订单CSV或XLSX文件（从快手小店-订单管理-导出），自动匹配快手订单表头字段。</p>
+					<div class="import-top-row">
+						<div class="import-left-column">
+							<div class="form-group">
+								<label for="kuaishou-shop-select">选择店铺</label>
+								<select id="kuaishou-shop-select" required>
+									<option value="麒麟区朵朵媛品服装店">麒麟区朵朵媛品服装店</option>
+									<!-- 如果有更多店铺，可以在这里添加 -->
+								</select>
+							</div>
+							<div class="file-input-wrapper">
+								<label for="kuaishou-file-import" class="file-label">选择快手订单文件 (CSV/XLSX)</label>
+								<input type="file" id="kuaishou-file-import" accept=".csv,.xlsx,.xls">
+								<span class="file-name" id="kuaishou-file-name">未选择文件</span>
+							</div>
+							<div class="action-buttons">
+								<button class="btn-success" id="kuaishou-import-btn" disabled>
+									<span>📥</span> 导入快手订单
+								</button>
+								<button class="btn-warning" id="kuaishou-download-template">
+									<span>📋</span> 下载快手订单模板
+								</button>
+							</div>
+						</div>
+						<div class="import-right-column">
+							<div class="import-help">
+								<h4>快手订单导出说明：</h4>
+								<ul>
+									<li>登录快手小店 → 订单管理</li>
+									<li>选择时间范围，点击"导出"按钮</li>
+									<li>选择"导出订单"，下载CSV或Excel格式文件</li>
+									<li>支持店铺：麒麟区朵朵媛品服装店</li>
+								</ul>
+							</div>
+						</div>
+						<div class="import-result" id="kuaishou-import-result">
+							<div id="kuaishou-import-result-text"></div>
+							<div class="import-errors" id="kuaishou-import-errors"></div>
+						</div>
+					</div>
+				</div>
+                <!-- 快手订单查询区域 -->
+				<div class="search-filters">
+					<h4>快手订单查询</h4>
+					<div class="filter-row">
+						<div class="filter-group">
+							<label for="kuaishou-search-time">订单创建时间范围</label>
+							<input type="date" id="kuaishou-search-time-start"> - 
+							<input type="date" id="kuaishou-search-time-end">
+						</div>
+						<div class="filter-group">
+							<label for="kuaishou-search-order-no">订单号</label>
+							<input type="text" id="kuaishou-search-order-no" placeholder="订单号">
+						</div>
+						<div class="filter-group">
+							<label for="kuaishou-search-product">商品名称</label>
+							<input type="text" id="kuaishou-search-product" placeholder="输入商品名称关键词">
+						</div>
+					</div>
+					<div class="filter-row">
+						<div class="filter-group">
+							<label for="kuaishou-search-status">订单状态</label>
+							<select id="kuaishou-search-status">
+								<option value="">全部</option>
+								<option value="待付款">待付款</option>
+								<option value="待发货">待发货</option>
+								<option value="已发货">已发货</option>
+								<option value="已完成">已完成</option>
+								<option value="已关闭">已关闭</option>
+								<option value="退款中">退款中</option>
+							</select>
+						</div>
+						<div class="filter-group">
+							<label for="kuaishou-search-after-sale">售后状态</label>
+							<select id="kuaishou-search-after-sale">
+								<option value="">全部</option>
+								<option value="退款成功">退款成功</option>
+								<option value="退款关闭">退款关闭</option>
+								<option value="待卖家收货">待卖家收货</option>
+								<option value="换货成功">换货成功</option>
+								<option value="待买家退货">待买家退货</option>
+								<option value="空白">空白</option>
+							</select>
+						</div>
+						<div class="filter-group">
+							<label for="kuaishou-search-amount">实付款范围 (元)</label>
+							<input type="number" id="kuaishou-search-amount-min" step="0.01" min="0" placeholder="最小"> - 
+							<input type="number" id="kuaishou-search-amount-max" step="0.01" min="0" placeholder="最大">
+						</div>
+					</div>
+					<div class="filter-group">
+						<label for="kuaishou-search-shop">店铺</label>
+						<input type="text" id="kuaishou-search-shop" value="麒麟区朵朵媛品服装店" readonly>
+					</div>
+					<div class="action-buttons">
+						<button class="reset-btn" id="kuaishou-search-btn">
+							<span>🔍</span> 查询
+						</button>
+						<button class="reset-btn" id="kuaishou-reset-search">
+							<span>🔄</span> 重置
+						</button>
+						<button class="export-btn" id="kuaishou-export-filtered">导出查询结果 (CSV)</button>
+					</div>
+				</div>
+				
+				<!-- 快手订单批量删除功能区 -->
+				<div class="select-all-container">
+					<div class="select-all-options">
+						<div class="select-all-option">
+							<input type="checkbox" id="kuaishou-select-all-pages"> 
+							<label for="kuaishou-select-all-pages">全选所有页订单</label>
+						</div>
+						<div class="select-all-option">
+							<input type="checkbox" id="kuaishou-select-all"> 
+							<label for="kuaishou-select-all">全选当前页订单</label>
+						</div>
+						<span style="margin-left: 15px; color: #6c757d;">
+							已选择 <span id="kuaishou-selected-count">0</span> 条记录
+						</span>
+					</div>
+					<button class="bulk-delete-btn" id="kuaishou-bulk-delete-btn" disabled>批量删除选中订单</button>
+				</div>            
+				<!-- 快手订单表格 -->
+				<div class="records">
+					<table id="kuaishou-orders-table">
+						<thead>
+							<tr>
+								<th width="40">选择</th>
+								<th>订单号</th>
+								<th>订单创建时间</th>
+								<th>订单状态</th>
+								<th>实付款</th>
+								<th>支付方式</th>
+								<th>成交数量</th>
+								<th>买家留言</th>
+								<th>账号明细</th>
+								<th>订单备注</th>
+								<th>售后状态</th>
+								<th>商品名称</th>
+								<th>商品ID</th>
+								<th>SKU编码</th>
+								<th>商品单价</th>
+								<th>收货地址-省</th>
+								<th>快递单号</th>
+								<th>店铺</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody id="kuaishou-orders-body">
+							<tr><td colspan="18" style="text-align:center">暂无快手订单数据</td></tr>
+						</tbody>
+					</table>
+				</div>
+				
+				<!-- 快手订单分页 -->
+				<div class="pagination" id="kuaishou-pagination">
+					<button id="kuaishou-prev-page" disabled>上一页</button>
+					<span class="pagination-info" id="kuaishou-page-info">第 1 页，共 1 页</span>
+					<button id="kuaishou-next-page" disabled>下一页</button>
+					<div class="page-jump">
+						<input type="number" id="kuaishou-jump-page" min="1" placeholder="页码" style="width: 60px; padding: 8px; text-align: center;">
+						<button id="kuaishou-jump-btn">跳转</button>
+					</div>
+				</div>
+			</div>
+            <!-- 抖音订单子面板 -->
+            <div class="platform-content" id="douyin-orders">
+                <!-- 抖音订单导入区域 -->
+				<div class="progress-container" id="douyin-progress-container" style="display: none; margin: 15px 0;">
+					<div class="progress-bar">
+						<div class="progress-fill" id="douyin-progress-fill" style="width: 0%;"></div>
+					</div>
+					<div class="progress-text" id="douyin-progress-text">0%</div>
+					<div class="progress-details" id="douyin-progress-details">正在准备导入...</div>
+				</div>
+                <div class="import-section">
+                    <p>支持导入抖音订单CSV或XLSX文件（从抖音小店-订单管理-导出），自动匹配抖音订单表头字段。</p>
+					<div class="import-top-row">
+						<div class="import-left-column">
+							<div class="form-group">
+								<label for="douyin-shop-select">选择导入店铺名</label>
+								<select id="douyin-shop-select" required>
+									<option value="朵以服饰女装店">朵以服饰女装店</option>
+								</select>
+							</div>
+							<div class="file-input-wrapper">
+								<label for="douyin-file-import" class="file-label">选择抖音订单文件 (CSV/XLSX)</label>
+								<input type="file" id="douyin-file-import" accept=".csv,.xlsx,.xls">
+								<span class="file-name" id="douyin-file-name">未选择文件</span>
+							</div>
+							<div class="action-buttons">
+								<button class="btn-success" id="douyin-import-btn" disabled>
+									<span>📥</span> 导入抖音订单
+								</button>
+								<button class="btn-warning" id="douyin-download-template">
+										<span>📋</span> 下载抖音订单模板
+								</button>
+							</div>
+						</div>
+						
+						<div class="import-right-column">
+							<div class="import-help">
+								<h4>抖音订单导出说明：</h4>
+								<ul>
+									<li>登录抖音小店 → 订单管理</li>
+									<li>选择时间范围，点击"导出"按钮</li>
+									<li>选择"导出订单"，下载CSV或Excel格式文件</li>
+									<li>支持店铺：朵以服饰女装店</li>
+								</ul>
+							</div>
+						</div>
+						<div class="import-result" id="douyin-import-result">
+							<div id="douyin-import-result-text"></div>
+							<div class="import-errors" id="douyin-import-errors"></div>
+						</div>
+					</div>
+                </div>
+                
+                <!-- 快手订单查询区域 -->
+                <div class="search-filters">
+                    <h4>抖音订单查询</h4>
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label for="douyin-search-time">订单提交时间范围</label>
+                            <input type="date" id="douyin-search-time-start"> - 
+                            <input type="date" id="douyin-search-time-end">
+                        </div>
+                        <div class="filter-group">
+                            <label for="douyin-search-order-no">订单号</label>
+                            <input type="text" id="douyin-search-order-no" placeholder="订单号">
+                        </div>
+                        <div class="filter-group">
+                            <label for="douyin-search-product">商品名称</label>
+                            <input type="text" id="douyin-search-product" placeholder="输入商品名称关键词">
+                        </div>
+                    </div>
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label for="douyin-search-status">订单状态</label>
+                            <select id="douyin-search-status">
+                                <option value="">全部</option>
+                                <option value="待付款">待付款</option>
+                                <option value="待发货">待发货</option>
+                                <option value="已发货">已发货</option>
+                                <option value="已完成">已完成</option>
+                                <option value="已关闭">已关闭</option>
+                                <option value="退款中">退款中</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="douyin-search-after-sale">售后状态</label>
+                            <select id="douyin-search-after-sale">
+                                <option value="">全部</option>
+                                <option value="退款成功">退款成功</option>
+                                <option value="退款关闭">退款关闭</option>
+                                <option value="待卖家收货">待卖家收货</option>
+                                <option value="换货成功">换货成功</option>
+                                <option value="待买家退货">待买家退货</option>
+                                <option value="空白">空白</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="douyin-search-amount">实付款范围 (元)</label>
+                            <input type="number" id="douyin-search-amount-min" step="0.01" min="0" placeholder="最小"> - 
+                            <input type="number" id="douyin-search-amount-max" step="0.01" min="0" placeholder="最大">
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <label for="douyin-search-shop">店铺</label>
+                        <input type="text" id="douyin-search-shop" value="朵以服饰女装店" readonly>
+                    </div>
+                    <div class="action-buttons"
+						<button class="reset-btn" id="douyin-search-btn">
+							<span>🔍</span> 查询
+						</button>
+						<button class="reset-btn" id="douyin-reset-search">
+							<span>🔄</span> 重置
+						</button>
+                        <button class="export-btn" id="douyin-export-filtered">导出查询结果 (CSV)</button>
+                    </div>
+                </div>
+                
+                <!-- 抖音订单批量删除功能区 -->
+				<div class="select-all-container">
+					<div class="select-all-options">
+						<div class="select-all-option">
+							<input type="checkbox" id="douyin-select-all-pages"> 
+							<label for="douyin-select-all-pages">全选所有页订单</label>
+						</div>
+						<div class="select-all-option">
+							<input type="checkbox" id="douyin-select-all"> 
+							<label for="douyin-select-all">全选当前页订单</label>
+						</div>
+						<span style="margin-left: 15px; color: #6c757d;">
+							已选择 <span id="douyin-selected-count">0</span> 条记录
+						</span>
+					</div>
+					<button class="bulk-delete-btn" id="douyin-bulk-delete-btn" disabled>批量删除选中订单</button>
+				</div>
+
+                
+                <!-- 抖音订单表格 -->
+                <div class="records">
+                    <table id="douyin-orders-table">
+                        <thead>
+                            <tr>
+                                <th>选择</th>
+								<th>主订单编号</th>
+								<th>子订单编号</th>
+								<th>支付方式</th>
+								<th>选购商品</th>
+								<th>货号</th>
+								<th>商品ID</th>
+								<th>商家编码</th>
+								<th>商品数量</th>
+								<th>商品金额</th>
+								<th>订单提交时间</th>
+								<th>支付完成时间</th>
+								<th>买家留言</th>
+								<th>商家备注</th>
+								<th>订单状态</th>
+								<th>取消原因</th>
+								<th>售后状态</th>
+								<th>订单应付金额</th>
+								<th>省</th>
+								<th>快递信息</th>
+								<th>店铺</th>
+								<th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="douyin-orders-body">
+                            <tr><td colspan="16" style="text-align:center">暂无抖音订单数据</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+				<!-- 在抖音订单表格后添加分页功能 -->
+				<div class="pagination" id="douyin-pagination">
+					<button id="douyin-prev-page" disabled>上一页</button>
+					<span class="pagination-info" id="douyin-page-info">第 1 页，共 1 页</span>
+					<button id="douyin-next-page" disabled>下一页</button>
+					<div class="page-jump">
+						<input type="number" id="douyin-jump-page" min="1" placeholder="页码" style="width: 60px; padding: 8px; text-align: center;">
+						<button id="douyin-jump-btn">跳转</button>
+					</div>
+				</div>
+            </div>
+
+		<!-- 拼多多订单子面板 -->
+		<div class="platform-content" id="pingduoduo-orders"> 000
+			<!-- 拼多多订单导入区域 -->
+			<div class="progress-container" id="pingduoduo-progress-container" style="display: none; margin: 15px 0;">
+				<div class="progress-bar">
+					<div class="progress-fill" id="pingduoduo-progress-fill" style="width: 0%;"></div>
+				</div>
+				<div class="progress-text" id="pingduoduo-progress-text">0%</div>
+				<div class="progress-details" id="pingduoduo-progress-details">正在准备导入...</div>
+			</div>
+			<div class="import-section">
+				<p>支持导入拼多多订单CSV或XLSX文件（从拼多多商家后台-订单管理-导出），自动匹配拼多多订单表头字段。</p>
+				<div class="import-top-row">
+					<div class="import-left-column">
+						<div class="form-group">
+							<label for="pingduoduo-shop-select">选择店铺</label>
+							<select id="pingduoduo-shop-select" required>
+								<option value="Duoyi广州店">Duoyi广州店</option>
+								<option value="DuoYi饰尚女装店">DuoYi饰尚女装店</option>
+							</select>
+						</div>
+						
+						<div class="file-input-wrapper">
+							<label for="pingduoduo-file-import" class="file-label">选择拼多多订单文件 (CSV/XLSX)</label>
+							<input type="file" id="pingduoduo-file-import" accept=".csv,.xlsx,.xls">
+							<span class="file-name" id="pingduoduo-file-name">未选择文件</span>
+						</div>
+					
+						<div class="action-buttons">
+							<button class="btn-success" id="pingduoduo-import-btn" disabled>
+								<span>📥</span> 导入拼多多订单
+							</button>
+							<button class="btn-warning" id="pingduoduo-download-template">
+								<span>📋</span> 下载拼多多订单模板
+							</button>
+						</div>
+					</div>
+					
+					<div class="import-right-column">
+						<div class="import-help" style="margin-top: 15px;">
+							<h4>拼多多订单导出说明：</h4>
+							<ul>
+								<li>登录拼多多商家后台 → 订单管理</li>
+								<li>选择时间范围，点击"导出"按钮</li>
+								<li>选择"导出订单"，下载CSV或Excel格式文件</li>
+								<li>支持店铺：Duoyi广州店、DuoYi饰尚女装店</li>
+							</ul>
+						</div>
+					</div>
+					<div class="import-result" id="pingduoduo-import-result">
+						<div id="pingduoduo-import-result-text"></div>
+						<div class="import-errors" id="pingduoduo-import-errors"></div>
+					</div>
+				</div>
+			</div>
+			
+			<!-- 拼多多订单查询区域 -->
+			<div class="search-filters">
+				<h4>拼多多订单查询</h4>
+				<div class="filter-row">
+					<div class="filter-group">
+						<label for="pingduoduo-search-time">支付时间范围</label>
+						<input type="date" id="pingduoduo-search-time-start"> - 
+						<input type="date" id="pingduoduo-search-time-end">
+					</div>
+					<div class="filter-group">
+						<label for="pingduoduo-search-order-no">订单号</label>
+						<input type="text" id="pingduoduo-search-order-no" placeholder="订单号">
+					</div>
+					<div class="filter-group">
+						<label for="pingduoduo-search-product">商品名称</label>
+						<input type="text" id="pingduoduo-search-product" placeholder="输入商品名称关键词">
+					</div>
+				</div>
+				<div class="filter-row">
+					<div class="filter-group">
+						<label for="pingduoduo-search-status">订单状态</label>
+						<select id="pingduoduo-search-status">
+							<option value="">全部</option>
+							<option value="待付款">待付款</option>
+							<option value="待发货">待发货</option>
+							<option value="已发货">已发货</option>
+							<option value="已完成">已完成</option>
+							<option value="已关闭">已关闭</option>
+						</select>
+					</div>
+					<div class="filter-group">
+						<label for="pingduoduo-search-after-sale">售后状态</label>
+						<select id="pingduoduo-search-after-sale">
+							<option value="">全部</option>
+							<option value="无售后">无售后</option>
+							<option value="退款中">退款中</option>
+							<option value="退款成功">退款成功</option>
+							<option value="退款关闭">退款关闭</option>
+						</select>
+					</div>
+					<div class="filter-group">
+						<label for="pingduoduo-search-amount">实付金额范围 (元)</label>
+						<input type="number" id="pingduoduo-search-amount-min" step="0.01" min="0" placeholder="最小"> - 
+						<input type="number" id="pingduoduo-search-amount-max" step="0.01" min="0" placeholder="最大">
+					</div>
+					<div class="filter-group">
+						<label for="pingduoduo-search-shop">店铺</label>
+						<select id="pingduoduo-search-shop">
+							<option value="">全部</option>
+							<option value="Duoyi广州店">Duoyi广州店</option>
+							<option value="DuoYi饰尚女装店">DuoYi饰尚女装店</option>
+						</select>
+					</div>
+				</div>
+				<div class="action-buttons">
+                    <button class="reset-btn" id="pingduoduo-search-btn">
+                        <span>🔍</span> 查询
+                    </button>
+                    <button class="reset-btn" id="pingduoduo-reset-search">
+                        <span>🔄</span> 重置
+                    </button>
+					<button class="export-btn" id="pingduoduo-export-filtered">导出查询结果 (CSV)</button>
+				</div>
+			</div>
+			
+			<!-- 拼多多订单批量删除功能区 -->
+			<div class="select-all-container">
+				<div class="select-all-options">
+					<div class="select-all-option">
+						<input type="checkbox" id="pingduoduo-select-all-pages"> 
+						<label for="pingduoduo-select-all-pages">全选所有页订单</label>
+					</div>
+					<div class="select-all-option">
+						<input type="checkbox" id="pingduoduo-select-all"> 
+						<label for="pingduoduo-select-all">全选当前页订单</label>
+					</div>
+					<span style="margin-left: 15px; color: #6c757d;">
+						已选择 <span id="pingduoduo-selected-count">0</span> 条记录
+					</span>
+				</div>
+				<button class="bulk-delete-btn" id="pingduoduo-bulk-delete-btn" disabled>批量删除选中订单</button>
+			</div>
+			
+			<!-- 拼多多订单表格 -->
+			<div class="records">
+				<table id="pingduoduo-orders-table">
+					<thead>
+						<tr>
+							<th width="40">选择</th>
+							<th>商品</th>
+							<th>订单号</th>
+							<th>订单状态</th>
+							<th>商品数量(件)</th>
+							<th>支付时间</th>
+							<th>商品id</th>
+							<th>商品规格</th>
+							<th>商家备注</th>
+							<th>买家留言</th>
+							<th>售后状态</th>
+							<th>订单成交时间</th>
+							<th>商品总价(元)</th>
+							<th>用户实付金额(元)</th>
+							<th>商家实收金额(元)</th>
+							<th>快递单号</th>
+							<th>省</th>
+							<th>店铺</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody id="pingduoduo-orders-body">
+						<tr><td colspan="18" style="text-align:center">暂无拼多多订单数据</td></tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="pagination" id="pingduoduo-pagination">
+				<button id="pingduoduo-prev-page" disabled>上一页</button>
+				<span class="pagination-info" id="pingduoduo-page-info">第 1 页，共 1 页</span>
+				<button id="pingduoduo-next-page" disabled>下一页</button>
+				<div class="page-jump">
+					<input type="number" id="pingduoduo-jump-page" min="1" placeholder="页码" style="width: 60px; padding: 8px; text-align: center;">
+					<button id="pingduoduo-jump-btn">跳转</button>
+				</div>
+			</div>
+		</div>
+		<!-- 视频号订单明细面板 -->
+		<div class="platform-content" id="shipinghao-orders">
+			<!-- 视频号订单导入区域 -->
+			<div class="progress-container" id="shipinghao-progress-container" style="display: none; margin: 15px 0;">
+				<div class="progress-bar">
+					<div class="progress-fill" id="shipinghao-progress-fill" style="width: 0%;"></div>
+				</div>
+				<div class="progress-text" id="shipinghao-progress-text">0%</div>
+				<div class="progress-details" id="shipinghao-progress-details">正在准备导入...</div>
+			</div>
+			<div class="import-section">
+				<p>支持导入视频号订单CSV或XLSX文件（从视频号小店-订单管理-导出），自动匹配视频号订单表头字段。</p>
+				<div class="import-top-row">
+					<div class="import-left-column">
+						<div class="form-group">
+							<label for="shipinghao-shop-select">选择店铺</label>
+							<select id="shipinghao-shop-select" required>
+								<option value="广州DuoYi朵以服饰店">广州DuoYi朵以服饰店</option>
+							</select>
+						</div>
+						
+						<div class="file-input-wrapper">
+							<label for="shipinghao-file-import" class="file-label">选择视频号订单文件 (CSV/XLSX)</label>
+							<input type="file" id="shipinghao-file-import" accept=".csv,.xlsx,.xls">
+							<span class="file-name" id="shipinghao-file-name">未选择文件</span>
+						</div>
+					
+						<div class="action-buttons">
+							<button class="btn-success" id="shipinghao-import-btn" disabled>
+								<span>📥</span> 导入视频号订单
+							</button>
+							<button class="btn-warning" id="shipinghao-download-template">
+								<span>📋</span> 下载视频号订单模板
+							</button>
+						</div>
+					</div>
+					
+					<div class="import-right-column">
+						<div class="import-help" style="margin-top: 15px;">
+							<h4>视频号订单导出说明：</h4>
+							<ul>
+								<li>登录视频号小店 → 订单管理</li>
+								<li>选择时间范围，点击"导出"按钮</li>
+								<li>选择"导出订单"，下载CSV或Excel格式文件</li>
+								<li>支持店铺：广州DuoYi朵以服饰店</li>
+							</ul>
+						</div>
+					</div>
+					<div class="import-result" id="shipinghao-import-result">
+						<div id="shipinghao-import-result-text"></div>
+						<div class="import-errors" id="shipinghao-import-errors"></div>
+					</div>
+				</div>
+			</div>
+			
+			<!-- 视频号订单查询区域 -->
+			<div class="search-filters">
+				<h4>视频号订单查询</h4>
+				<div class="filter-row">
+					<div class="filter-group">
+						<label for="shipinghao-search-time">订单下单时间范围</label>
+						<input type="date" id="shipinghao-search-time-start"> - 
+						<input type="date" id="shipinghao-search-time-end">
+					</div>
+					<div class="filter-group">
+						<label for="shipinghao-search-order-no">订单号</label>
+						<input type="text" id="shipinghao-search-order-no" placeholder="订单号">
+					</div>
+					<div class="filter-group">
+						<label for="shipinghao-search-product">商品名称</label>
+						<input type="text" id="shipinghao-search-product" placeholder="输入商品名称关键词">
+					</div>
+				</div>
+				<div class="filter-row">
+					<div class="filter-group">
+						<label for="shipinghao-search-status">订单状态</label>
+						<select id="shipinghao-search-status">
+							<option value="">全部</option>
+							<option value="待付款">待付款</option>
+							<option value="待发货">待发货</option>
+							<option value="已发货">已发货</option>
+							<option value="已完成">已完成</option>
+							<option value="已关闭">已关闭</option>
+						</select>
+					</div>
+					<div class="filter-group">
+						<label for="shipinghao-search-after-sale">售后状态</label>
+						<select id="shipinghao-search-after-sale">
+							<option value="">全部</option>
+							<option value="无售后">无售后</option>
+							<option value="退款中">退款中</option>
+							<option value="退款成功">退款成功</option>
+							<option value="退款关闭">退款关闭</option>
+						</select>
+					</div>
+					<div class="filter-group">
+						<label for="shipinghao-search-amount">实付金额范围 (元)</label>
+						<input type="number" id="shipinghao-search-amount-min" step="0.01" min="0" placeholder="最小"> - 
+						<input type="number" id="shipinghao-search-amount-max" step="0.01" min="0" placeholder="最大">
+					</div>
+					<div class="filter-group">
+						<label for="shipinghao-search-shop">店铺</label>
+						<select id="shipinghao-search-shop">
+							<option value="">全部</option>
+							<option value="Duoyi广州店A">Duoyi广州店A</option>
+							<option value="广州DuoYi朵以服饰店">广州DuoYi朵以服饰店</option>
+						</select>
+					</div>
+				</div>
+				<div class="action-buttons">
+                    <button class="reset-btn" id="shipinghao-search-btn">
+                        <span>🔍</span> 查询
+                    </button>
+                    <button class="reset-btn" id="shipinghao-reset-search">
+                        <span>🔄</span> 重置
+                    </button>
+					<button class="export-btn" id="shipinghao-export-filtered">导出查询结果 (CSV)</button>
+				</div>
+			</div>
+			
+			<!-- 视频号订单批量删除功能区 -->
+			<div class="select-all-container">
+				<div class="select-all-options">
+					<div class="select-all-option">
+						<input type="checkbox" id="shipinghao-select-all-pages"> 
+						<label for="shipinghao-select-all-pages">全选所有页订单</label>
+					</div>
+					<div class="select-all-option">
+						<input type="checkbox" id="shipinghao-select-all"> 
+						<label for="shipinghao-select-all">全选当前页订单</label>
+					</div>
+					<span style="margin-left: 15px; color: #6c757d;">
+						已选择 <span id="shipinghao-selected-count">0</span> 条记录
+					</span>
+				</div>
+				<button class="bulk-delete-btn" id="shipinghao-bulk-delete-btn" disabled>批量删除选中订单</button>
+			</div>
+			
+			<!-- 视频号订单表格 -->
+			<div class="records">
+				<table id="shipinghao-orders-table">
+					<thead>
+						<tr>
+							<th width="40">选择</th>
+							<th>订单号</th>
+							<th>订单下单时间</th>
+							<th>订单状态</th>
+							<th>省</th>
+							<th>买家备注</th>
+							<th>商家备注</th>
+							<th>商品总价</th>
+							<th>订单实际支付金额</th>
+							<th>支付方式</th>
+							<th>支付时间</th>
+							<th>交易单号</th>
+							<th>快递单号</th>
+							<th>商品名称</th>
+							<th>商品编码(自定义)</th>
+							<th>SKU编码(自定义)</th>
+							<th>商品数量</th>
+							<th>商品发货</th>
+							<th>商品售后</th>
+							<th>商品已退款金额</th>
+							<th>店铺</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody id="shipinghao-orders-body">
+						<tr><td colspan="22" style="text-align:center">暂无视频号订单数据</td></tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="pagination" id="shipinghao-pagination">
+				<button id="shipinghao-prev-page" disabled>上一页</button>
+				<span class="pagination-info" id="shipinghao-page-info">第 1 页，共 1 页</span>
+				<button id="shipinghao-next-page" disabled>下一页</button>
+				<div class="page-jump">
+					<input type="number" id="shipinghao-jump-page" min="1" placeholder="页码" style="width: 60px; padding: 8px; text-align: center;">
+					<button id="shipinghao-jump-btn">跳转</button>
+				</div>
+			</div>
+		</div>
+			<!-- 小红书订单子面板 -->
+			<div class="platform-content" id="xiaohongshu-orders">
+				<!-- 小红书订单导入区域 -->
+				<div class="progress-container" id="xiaohongshu-progress-container" style="display: none; margin: 15px 0;">
+					<div class="progress-bar">
+						<div class="progress-fill" id="xiaohongshu-progress-fill" style="width: 0%;"></div>
+					</div>
+					<div class="progress-text" id="xiaohongshu-progress-text">0%</div>
+					<div class="progress-details" id="xiaohongshu-progress-details">正在准备导入...</div>
+				</div>
+				<div class="import-section">
+					<p>支持导入小红书订单CSV或XLSX文件（从小红书商家后台-订单管理-导出），自动匹配小红书订单表头字段。</p>
+					<div class="import-top-row">
+						<div class="import-left-column">
+							<div class="form-group">
+								<label for="xiaohongshu-shop-select">选择店铺</label>
+								<select id="xiaohongshu-shop-select" required>
+									<option value="广州DuoYi朵以服饰店">朵以女装折扣的店</option>
+								</select>
+							</div>
+							
+							<div class="file-input-wrapper">
+								<label for="xiaohongshu-file-import" class="file-label">选择小红书订单文件 (CSV/XLSX)</label>
+								<input type="file" id="xiaohongshu-file-import" accept=".csv,.xlsx,.xls">
+								<span class="file-name" id="xiaohongshu-file-name">未选择文件</span>
+							</div>
+						
+							<div class="action-buttons">
+								<button class="btn-success" id="xiaohongshu-import-btn" disabled>
+									<span>📥</span> 导入小红书订单
+								</button>
+								<button class="btn-warning" id="xiaohongshu-download-template">
+									<span>📋</span> 下载小红书订单模板
+								</button>
+							</div>
+						</div>
+						
+						<div class="import-right-column">
+							<div class="import-help" style="margin-top: 15px;">
+								<h4>小红书订单导出说明：</h4>
+								<ul>
+									<li>登录小红书商家后台 → 订单管理</li>
+									<li>选择时间范围，点击"导出"按钮</li>
+									<li>选择"导出订单"，下载CSV或Excel格式文件</li>
+									<li>支持店铺：广州DuoYi朵以服饰店</li>
+								</ul>
+							</div>
+						</div>
+						<div class="import-result" id="xiaohongshu-import-result">
+							<div id="xiaohongshu-import-result-text"></div>
+							<div class="import-errors" id="xiaohongshu-import-errors"></div>
+						</div>
+					</div>
+				</div>
+				
+				<!-- 小红书订单查询区域 -->
+				<div class="search-filters">
+					<h4>小红书订单查询</h4>
+					<div class="filter-row">
+						<div class="filter-group">
+							<label for="xiaohongshu-search-time">订单创建时间范围</label>
+							<input type="date" id="xiaohongshu-search-time-start"> - 
+							<input type="date" id="xiaohongshu-search-time-end">
+						</div>
+						<div class="filter-group">
+							<label for="xiaohongshu-search-order-no">订单号</label>
+							<input type="text" id="xiaohongshu-search-order-no" placeholder="订单号">
+						</div>
+						<div class="filter-group">
+							<label for="xiaohongshu-search-product">商品名称</label>
+							<input type="text" id="xiaohongshu-search-product" placeholder="输入商品名称关键词">
+						</div>
+					</div>
+					<div class="filter-row">
+						<div class="filter-group">
+							<label for="xiaohongshu-search-status">订单状态</label>
+							<select id="xiaohongshu-search-status">
+								<option value="">全部</option>
+								<option value="待付款">待付款</option>
+								<option value="待发货">待发货</option>
+								<option value="已发货">已发货</option>
+								<option value="已完成">已完成</option>
+								<option value="已关闭">已关闭</option>
+							</select>
+						</div>
+						<div class="filter-group">
+							<label for="xiaohongshu-search-after-sale">售后状态</label>
+							<select id="xiaohongshu-search-after-sale">
+								<option value="">全部</option>
+								<option value="无售后">无售后</option>
+								<option value="退款中">退款中</option>
+								<option value="退款成功">退款成功</option>
+								<option value="退款关闭">退款关闭</option>
+							</select>
+						</div>
+						<div class="filter-group">
+							<label for="xiaohongshu-search-amount">实付金额范围 (元)</label>
+							<input type="number" id="xiaohongshu-search-amount-min" step="0.01" min="0" placeholder="最小"> - 
+							<input type="number" id="xiaohongshu-search-amount-max" step="0.01" min="0" placeholder="最大">
+						</div>
+						<div class="filter-group">
+							<label for="xiaohongshu-search-shop">店铺</label>
+							<select id="xiaohongshu-search-shop">
+								<option value="">全部</option>
+								<option value="朵以女装折扣的店">朵以女装折扣的店</option>
+							</select>
+						</div>
+					</div>
+					<div class="action-buttons">
+						<button class="reset-btn" id="xiaohongshu-search-btn">
+							<span>🔍</span> 查询
+						</button>
+						<button class="reset-btn" id="xiaohongshu-reset-search">
+							<span>🔄</span> 重置
+						</button>
+						<button class="export-btn" id="xiaohongshu-export-filtered">导出查询结果 (CSV)</button>
+					</div>
+				</div>
+				
+				<!-- 小红书订单批量删除功能区 -->
+				<div class="select-all-container">
+					<div class="select-all-options">
+						<div class="select-all-option">
+							<input type="checkbox" id="xiaohongshu-select-all-pages"> 
+							<label for="xiaohongshu-select-all-pages">全选所有页订单</label>
+						</div>
+						<div class="select-all-option">
+							<input type="checkbox" id="xiaohongshu-select-all"> 
+							<label for="xiaohongshu-select-all">全选当前页订单</label>
+						</div>
+						<span style="margin-left: 15px; color: #6c757d;">
+							已选择 <span id="xiaohongshu-selected-count">0</span> 条记录
+						</span>
+					</div>
+					<button class="bulk-delete-btn" id="xiaohongshu-bulk-delete-btn" disabled>批量删除选中订单</button>
+				</div>
+				
+				<!-- 小红书订单表格 -->
+				<div class="records">
+					<table id="xiaohongshu-orders-table">
+						<thead>
+							<tr>
+								<th width="40">选择</th>
+								<th>订单号</th>
+								<th>订单状态</th>
+								<th>售后状态</th>
+								<th>订单类型</th>
+								<th>订单标记</th>
+								<th>省</th>
+								<th>SKU规格</th>
+								<th>SKU件数</th>
+								<th>商品总价(元)</th>
+								<th>用户应付金额(元)</th>
+								<th>商家应收金额(元)</th>
+								<th>支付方式</th>
+								<th>支付时间</th>
+								<th>快递单号</th>
+								<th>订单创建时间</th>
+								<th>包裹备注信息</th>
+								<th>店铺名称</th>
+								<th>商家编码</th>
+								<th>商品ID</th>
+								<th>商品名称</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody id="xiaohongshu-orders-body">
+							<tr><td colspan="22" style="text-align:center">暂无小红书订单数据</td></tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="pagination" id="xiaohongshu-pagination">
+					<button id="xiaohongshu-prev-page" disabled>上一页</button>
+					<span class="pagination-info" id="xiaohongshu-page-info">第 1 页，共 1 页</span>
+					<button id="xiaohongshu-next-page" disabled>下一页</button>
+					<div class="page-jump">
+						<input type="number" id="xiaohongshu-jump-page" min="1" placeholder="页码" style="width: 60px; padding: 8px; text-align: center;">
+						<button id="xiaohongshu-jump-btn">跳转</button>
+					</div>
+				</div>
+			</div>
+			<!-- 订单汇总面板 -->
+			<div class="platform-content" id="huizong-orders">
+				<div class="summary-header">
+					<h3>平台订单汇总明细</h3>
+					<p>各电商平台订单数据统计与对比分析</p>
+				</div>
+				
+				<!-- 汇总筛选区域 -->
+				<div class="summary-filters">
+					<div class="filter-row">
+						<div class="filter-group">
+							<label for="summary-time-start">开始日期</label>
+							<input type="date" id="summary-time-start">
+						</div>
+						<div class="filter-group">
+							<label for="summary-time-end">结束日期</label>
+							<input type="date" id="summary-time-end">
+						</div>
+						<div class="filter-group">
+							<label for="summary-platform">平台筛选</label>
+							<select id="summary-platform" multiple>
+								<option value="taobao" selected>淘宝</option>
+								<option value="kuaishou" selected>快手</option>
+								<option value="douyin" selected>抖音</option>
+								<option value="pingduoduo" selected>拼多多</option>
+								<option value="shipinghao" selected>视频号</option>
+								<option value="xiaohongshu" selected>小红书</option>
+							</select>
+						</div>
+						<div class="filter-group">
+							<label>&nbsp;</label>
+							<button id="summary-refresh-btn" class="primary-btn">刷新数据</button>
+							<button id="summary-export-btn" class="export-btn">导出汇总</button>
+						</div>
+					</div>
+				</div>
+				
+				<!-- 关键指标卡片 -->
+				<div class="summary-cards">
+					<div class="summary-card">
+						<div class="card-icon">📦</div>
+						<div class="card-content">
+							<div class="card-value" id="total-orders">0</div>
+							<div class="card-label">总订单数</div>
+						</div>
+					</div>
+					<div class="summary-card">
+						<div class="card-icon">🎨</div>
+						<div class="card-content">
+							<div class="card-value" id="total-amount">¥0.00</div>
+							<div class="card-label">总交易金额</div>
+						</div>
+					</div>
+					<div class="summary-card">
+						<div class="card-icon">📊</div>
+						<div class="card-content">
+							<div class="card-value" id="avg-order-value">¥0.00</div>
+							<div class="card-label">平均订单价值</div>
+						</div>
+					</div>
+					<div class="summary-card">
+						<div class="card-icon">🔄</div>
+						<div class="card-content">
+							<div class="card-value" id="refund-rate">0%</div>
+							<div class="card-label">退款率</div>
+						</div>
+					</div>
+				</div>
+				
+				<!-- 平台对比图表 -->
+				<div class="summary-charts">
+					<div class="chart-row">
+						<div class="chart-container">
+							<h4>各平台订单数量对比</h4>
+							<canvas id="platform-orders-chart"></canvas>
+						</div>
+						<div class="chart-container">
+							<h4>各平台交易金额对比</h4>
+							<canvas id="platform-amount-chart"></canvas>
+						</div>
+					</div>
+					<div class="chart-row">
+						<div class="chart-container">
+							<h4>各平台退款率对比</h4>
+							<canvas id="platform-refund-chart"></canvas>
+						</div>
+						<div class="chart-container">
+							<h4>订单状态分布</h4>
+							<canvas id="order-status-chart"></canvas>
+						</div>
+					</div>
+				</div>
+				
+				<!-- 详细汇总表格 -->
+				<div class="summary-table-container">
+					<h4>平台订单详细汇总</h4>
+					<div class="table-controls">
+						<div class="table-search">
+							<input type="text" id="summary-table-search" placeholder="搜索平台或店铺...">
+						</div>
+						<div class="table-sort">
+							<label for="summary-sort-by">排序方式:</label>
+							<select id="summary-sort-by">
+								<option value="platform">平台</option>
+								<option value="orders">订单数</option>
+								<option value="amount">交易金额</option>
+								<option value="refundRate">退款率</option>
+							</select>
+							<select id="summary-sort-order">
+								<option value="asc">升序</option>
+								<option value="desc" selected>降序</option>
+							</select>
+						</div>
+					</div>
+					<div class="table-responsive">
+						<table id="platform-summary-table" class="summary-table">
+							<thead>
+								<tr>
+									<th data-sort="platform">平台</th>
+									<th data-sort="shop">店铺</th>
+									<th data-sort="orders">订单数</th>
+									<th data-sort="amount">交易金额</th>
+									<th data-sort="avgAmount">平均订单金额</th>
+									<th data-sort="refundCount">退款订单数</th>
+									<th data-sort="refundRate">退款率</th>
+									<th data-sort="pending">待发货</th>
+									<th data-sort="shipped">已发货</th>
+									<th data-sort="completed">已完成</th>
+									<th data-sort="cancelled">已取消</th>
+								</tr>
+							</thead>
+							<tbody id="platform-summary-body">
+								<!-- 汇总数据将在这里动态生成 -->
+							</tbody>
+							<tfoot>
+								<tr class="summary-total">
+									<td colspan="2">总计</td>
+									<td id="total-orders-foot">0</td>
+									<td id="total-amount-foot">¥0.00</td>
+									<td id="avg-amount-foot">¥0.00</td>
+									<td id="total-refund-foot">0</td>
+									<td id="total-refund-rate-foot">0%</td>
+									<td id="total-pending-foot">0</td>
+									<td id="total-shipped-foot">0</td>
+									<td id="total-completed-foot">0</td>
+									<td id="total-cancelled-foot">0</td>
+								</tr>
+							</tfoot>
+						</table>
+					</div>
+				</div>
+				
+				<!-- 月度趋势分析 -->
+				<div class="monthly-trend">
+					<h4>月度订单趋势</h4>
+					<div class="trend-controls">
+						<div class="filter-group">
+							<label for="trend-year">选择年份:</label>
+							<select id="trend-year">
+								<!-- 年份选项将动态生成 -->
+							</select>
+						</div>
+						<div class="filter-group">
+							<label for="trend-platform">平台:</label>
+							<select id="trend-platform">
+								<option value="all">全部平台</option>
+								<option value="taobao">淘宝</option>
+								<option value="kuaishou">快手</option>
+								<option value="douyin">抖音</option>
+								<option value="pingduoduo">拼多多</option>
+								<option value="shipinghao">视频号</option>
+								<option value="xiaohongshu">小红书</option>
+							</select>
+						</div>
+					</div>
+					<div class="chart-container">
+						<canvas id="monthly-trend-chart"></canvas>
+					</div>
+				</div>
+			</div>
+		</div>
+        <!-- 直播订单明细面板 -->
+        <div class="tab-content" id="broadcast-orders">
+            <div class="platform-tabs">
+                <button class="platform-tab active" data-platform="live-records">直播记录管理</button>
+                <button class="platform-tab" data-platform="ZBFCCFX-orders">直播分场次分析</button>
+				<button class="platform-tab" data-platform="ZBDDFX-orders">直播订单分析</button>
+				<button class="platform-tab" data-platform="ZBZTFX-orders">主播整体分析</button>		
+            </div>
+			<!-- 直播记录管理 -->
+			<div class="platform-content" id="live-records">
+				<!-- 直播记录导入区域 -->
+				<div class="progress-container" id="live-records-progress-container" style="display: none; margin: 15px 0;">
+					<div class="progress-bar">
+						<div class="progress-fill" id="live-records-progress-fill" style="width: 0%;"></div>
+					</div>
+					<div class="progress-text" id="live-records-progress-text">0%</div>
+					<div class="progress-details" id="live-records-progress-details">正在准备导入...</div>
+				</div>
+				
+				<div class="import-section">
+					<p>支持导入直播记录CSV或XLSX文件，包含直播开始时间、结束时间、场次ID、主播、开播时长等信息。</p>
+					<div class="import-top-row">
+						<div class="import-left-column">
+							<div class="file-input-wrapper">
+								<label for="live-records-file-import" class="file-label">选择直播记录文件 (CSV/XLSX)</label>
+								<input type="file" id="live-records-file-import" accept=".csv,.xlsx,.xls">
+								<span class="file-name" id="live-records-file-name">未选择文件</span>
+							</div>
+							
+							<div class="action-buttons">
+								<button class="btn-success" id="live-records-import-btn" disabled>
+									<span>📥</span> 导入直播记录
+								</button>
+								<button class="btn-warning" id="live-records-download-template">
+									<span>📋</span> 下载直播记录模板
+								</button>
+							</div>
+						</div>
+						
+						<div class="import-right-column">
+							<div class="import-help" style="margin-top: 15px;">
+								<h4>直播记录导入说明：</h4>
+								<ul>
+									<li>支持格式：CSV、XLSX、XLS</li>
+									<li>必需字段：直播开始时间、直播结束时间、场次ID、主播</li>
+									<li>开播时长会自动计算，也可手动填写</li>
+									<li>日期格式：YYYY-MM-DD HH:MM:SS 或 YYYY/MM/DD HH:MM:SS</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					
+					<div class="import-result" id="live-records-import-result">
+						<div id="live-records-import-result-text"></div>
+						<div class="import-errors" id="live-records-import-errors"></div>
+					</div>
+				</div>
+				
+				<!-- 直播记录查询区域 -->
+				<div class="search-filters">
+					<h4>直播记录查询</h4>
+					<div class="filter-row">
+						<div class="filter-group">
+							<label for="live-records-search-time">直播时间范围</label>
+							<input type="date" id="live-records-search-time-start"> - 
+							<input type="date" id="live-records-search-time-end">
+						</div>
+						<div class="filter-group">
+							<label for="live-records-search-session">场次ID</label>
+							<input type="text" id="live-records-search-session" placeholder="输入场次ID">
+						</div>
+						<div class="filter-group">
+							<label for="live-records-search-anchor">主播</label>
+							<input type="text" id="live-records-search-anchor" placeholder="输入主播姓名支持模糊查询">
+						</div>
+					</div>
+					<div class="filter-row">
+						<div class="filter-group">
+							<label for="live-records-search-duration-min">最短时长(分钟)</label>
+							<input type="number" id="live-records-search-duration-min" min="0" placeholder="最小时长">
+						</div>
+						<div class="filter-group">
+							<label for="live-records-search-duration-max">最长时长(分钟)</label>
+							<input type="number" id="live-records-search-duration-max" min="0" placeholder="最大时长">
+						</div>
+						<div class="filter-group">
+							<label>&nbsp;</label>
+							<div style="margin-top: 8px;"></div>
+						</div>
+					</div>
+					<div class="action-buttons">
+                    <button class="reset-btn" id="live-records-search-btn">
+                        <span>🔍</span> 查询
+                    </button>
+                    <button class="reset-btn" id="live-records-reset-search">
+                        <span>🔄</span> 重置
+                    </button>
+						<button class="export-btn" id="live-records-export-filtered">导出查询结果 (CSV)</button>
+						<button class="export-btn" id="live-records-export-all">导出所有记录 (CSV)</button>
+					</div>
+				</div>
+				
+				<!-- 直播记录批量操作区域 -->
+				<div class="select-all-container">
+					<div class="select-all-options">
+						<div class="select-all-option">
+							<input type="checkbox" id="live-records-select-all-pages"> 
+							<label for="live-records-select-all-pages">全选所有页记录</label>
+						</div>
+						<div class="select-all-option">
+							<input type="checkbox" id="live-records-select-all"> 
+							<label for="live-records-select-all">全选当前页记录</label>
+						</div>
+						<span style="margin-left: 15px; color: #6c757d;">
+							已选择 <span id="live-records-selected-count">0</span> 条记录
+						</span>
+					</div>
+					<button class="bulk-delete-btn" id="live-records-bulk-delete-btn" disabled>批量删除选中记录</button>
+				</div>
+				
+				<!-- 直播记录表格 -->
+				<div class="records">
+					<table id="live-records-table">
+						<thead>
+							<tr>
+								<th width="40">选择</th>
+								<th>直播开始时间</th>
+								<th>直播结束时间</th>
+								<th>场次ID</th>
+								<th>主播</th>
+								<th>开播时长(分钟)</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody id="live-records-body">
+							<tr><td colspan="7" style="text-align:center">暂无直播记录数据</td></tr>
+						</tbody>
+					</table>
+				</div>
+				
+				<!-- 直播记录分页 -->
+				<div class="pagination" id="live-records-pagination">
+					<button id="live-records-prev-page" disabled>上一页</button>
+					<span class="pagination-info" id="live-records-page-info">第 1 页，共 1 页</span>
+					<button id="live-records-next-page" disabled>下一页</button>
+					<div class="page-jump">
+						<input type="number" id="live-records-jump-page" min="1" placeholder="页码" style="width: 60px; padding: 8px; text-align: center;">
+						<button id="live-records-jump-btn">跳转</button>
+					</div>
+				</div>
+			</div>
+			<!-- 直播分场次分析 -->
+			<div class="platform-content" id="ZBFCCFX-orders">
+				<!-- 直播分场次分析导入区域 -->
+				<div class="progress-container" id="live-session-progress-container" style="display: none; margin: 15px 0;">
+					<div class="progress-bar">
+						<div class="progress-fill" id="live-session-progress-fill" style="width: 0%;"></div>
+					</div>
+					<div class="progress-text" id="live-session-progress-text">0%</div>
+					<div class="progress-details" id="live-session-progress-details">正在准备导入...</div>
+				</div>
+				
+				<div class="import-section">
+					<p>支持导入直播分场次分析CSV或XLSX文件，包含完整的直播数据统计和分析指标。</p>
+					<div class="import-top-row">
+						<div class="import-left-column">
+							<div class="file-input-wrapper">
+								<label for="live-session-file-import" class="file-label">选择直播分场次分析文件 (CSV/XLSX)</label>
+								<input type="file" id="live-session-file-import" accept=".csv,.xlsx,.xls">
+								<span class="file-name" id="live-session-file-name">未选择文件</span>
+							</div>
+							
+							<div class="action-buttons">
+								<button class="btn-success" id="live-session-import-btn" disabled>
+									<span>📥</span> 导入直播分场次数据
+								</button>
+								<button class="btn-warning" id="live-session-download-template">
+									<span>📋</span> 下载直播分场次模板
+								</button>
+							</div>
+						</div>
+						
+						<div class="import-right-column">
+							<div class="import-help" style="margin-top: 15px;">
+								<h4>直播分场次分析导入说明：</h4>
+								<ul>
+									<li>支持格式：CSV、XLSX、XLS</li>
+									<li>必需字段：场次ID、直播开始时间、直播结束时间、主播</li>
+									<li>时间格式：YYYY-MM-DD HH:MM:SS 或 YYYY/MM/DD HH:MM:SS</li>
+									<li>数值字段会自动转换为数字类型</li>
+									<li>建议先下载模板查看数据格式</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					
+					<div class="import-result" id="live-session-import-result">
+						<div id="live-session-import-result-text"></div>
+						<div class="import-errors" id="live-session-import-errors"></div>
+					</div>
+				</div>
+				
+				<!-- 直播分场次分析查询区域 -->
+				<div class="search-form" style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+					<h3 style="margin-top: 0; margin-bottom: 15px;">搜索条件</h3>
+					<div class="search-row" style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 10px;">
+					<div class="search-row" style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 10px;">
+						<!-- 日期范围 -->
+						<div class="search-group">
+							<label>开始日期:</label>
+							<input type="date" id="live-session-search-date-start" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+						</div>
+						<div class="search-group">
+							<label>结束日期:</label>
+							<input type="date" id="live-session-search-date-end" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+						</div>
+						</div>
+						<!-- 文本搜索 -->
+						<div class="search-group">
+							<label>场次信息:</label>
+							<input type="text" id="live-session-search-session-info" placeholder="输入场次信息..." style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+						</div>
+						<div class="search-group">
+							<label>场次ID:</label>
+							<input type="text" id="live-session-search-session-id" placeholder="输入场次ID..." style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+						</div>
+						<div class="search-group">
+							<label>主播:</label>
+							<input type="text" id="live-session-search-anchor" placeholder="输入主播名称..." style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+						</div>
+					</div>
+					<div class="search-row" style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px;">
+						<!-- 数值范围 -->
+						<div class="search-group">
+							<label>时长范围(分钟):</label>
+							<input type="number" id="live-session-search-duration-min" placeholder="最小时长" min="0" style="width: 100px; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+							<span> - </span>
+							<input type="number" id="live-session-search-duration-max" placeholder="最大时长" min="0" style="width: 100px; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+						</div>
+						<div class="search-group">
+							<label>观看人数范围:</label>
+							<input type="number" id="live-session-search-viewers-min" placeholder="最小人数" min="0" style="width: 100px; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+							<span> - </span>
+							<input type="number" id="live-session-search-viewers-max" placeholder="最大人数" min="0" style="width: 100px; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+						</div>
+					</div>
+					
+					<!-- 操作按钮 -->
+					<div class="search-actions" style="display: flex; gap: 10px;">
+						<button id="live-session-search-btn" class="btn-primary" style="padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">搜索</button>
+						<button id="live-session-reset-search" class="btn-secondary" style="padding: 8px 16px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">重置</button>
+						<button class="export-btn" id="live-session-export-filtered">导出查询结果 (CSV)</button>
+						<button class="export-btn" id="live-session-export-all">导出所有记录 (CSV)</button>
+					</div>
+				</div>
+				
+				<!-- 直播分场次分析批量操作区域 -->
+				<div class="select-all-container">
+					<div class="select-all-options">
+						<div class="select-all-option">
+							<input type="checkbox" id="live-session-select-all-pages"> 
+							<label for="live-session-select-all-pages">全选所有页记录</label>
+						</div>
+						<div class="select-all-option">
+							<input type="checkbox" id="live-session-select-all"> 
+							<label for="live-session-select-all">全选当前页记录</label>
+						</div>
+						<span style="margin-left: 15px; color: #6c757d;">
+							已选择 <span id="live-session-selected-count">0</span> 条记录
+						</span>
+					</div>
+					<button class="bulk-delete-btn" id="live-session-bulk-delete-btn" disabled>批量删除选中记录</button>
+				</div>
+				
+				<!-- 直播分场次分析表格 -->
+				<div class="records" style="overflow-x: auto;">
+					<table id="live-session-table">
+						<thead>
+							<tr>
+								<th width="30"><input type="checkbox" id="live-session-table-select-all"></th>
+								<!-- 基础信息字段 -->
+								<th>场次信息</th>
+								<th>场次ID</th>
+								<th>直播开始时间</th>
+								<th>直播结束时间</th>
+								<th>开播时长(分钟)</th>
+								
+								<!-- 观看数据字段 -->
+								<th>封面图点击率</th>
+								<th>观看人数</th>
+								<th>观看次数</th>
+								<th>新增粉丝数</th>
+								<th>转粉率</th>
+								<th>流量券消耗</th>
+								<th>观看总时长</th>
+								<th>人均观看时长(秒)</th>
+								<th>次均观看时长(秒)</th>
+								
+								<!-- 商品数据字段 -->
+								<th>商品点击人数</th>
+								<th>商品点击次数</th>
+								<th>商品点击率</th>
+								<th>加购人数</th>
+								<th>加购件数</th>
+								<th>加购次数</th>
+								<th>加购转化率</th>
+								
+								<!-- 成交数据字段 -->
+								<th>成交金额(元)</th>
+								<th>成交人数</th>
+								<th>成交件数</th>
+								<th>成交笔数</th>
+								<th>成交转化率</th>
+								
+								<!-- 退款数据字段 -->
+								<th>退款人数</th>
+								<th>退款笔数</th>
+								<th>退款件数</th>
+								<th>退款金额(元)</th>
+								
+								<!-- 预售数据字段 -->
+								<th>预售定金支付金额(元)</th>
+								<th>预售预估总金额(元)</th>
+								
+								<!-- 主播信息 -->
+								<th>主播</th>
+								
+								<!-- 操作列 -->
+								<th width="80">操作</th>
+							</tr>
+						</thead>
+						<tbody id="live-session-body">
+							<tr><td colspan="34" style="text-align:center">暂无直播分场次分析数据</td></tr>
+						</tbody>
+					</table>
+				</div>
+				
+				<!-- 直播分场次分析分页 -->
+				<div class="pagination" id="live-session-pagination">
+					<button id="live-session-prev-page" disabled>上一页</button>
+					<span class="pagination-info" id="live-session-page-info">第 1 页，共 1 页</span>
+					<button id="live-session-next-page" disabled>下一页</button>
+					<div class="page-jump">
+						<input type="number" id="live-session-jump-page" min="1" placeholder="页码" style="width: 60px; padding: 8px; text-align: center;">
+						<button id="live-session-jump-btn">跳转</button>
+					</div>
+				</div>
+			</div>
+			<!-- 直播订单分析 -->
+			<div class="platform-content" id="ZBDDFX-orders">
+				<!-- 直播订单分析导入区域 -->
+				<div class="progress-container" id="live-order-progress-container" style="display: none; margin: 15px 0;">
+					<div class="progress-bar">
+						<div class="progress-fill" id="live-order-progress-fill" style="width: 0%;"></div>
+					</div>
+					<div class="progress-text" id="live-order-progress-text">0%</div>
+					<div class="progress-details" id="live-order-progress-details">正在准备导入...</div>
+				</div>
+				
+				<div class="import-section">
+					<p>支持导入直播订单分析CSV或XLSX文件，包含直播场次、订单信息、支付金额等详细数据。</p>
+					<div class="import-top-row">
+						<div class="import-left-column">
+							<div class="file-input-wrapper">
+								<label for="live-order-file-import" class="file-label">选择直播订单分析文件 (CSV/XLSX)</label>
+								<input type="file" id="live-order-file-import" accept=".csv,.xlsx,.xls">
+								<span class="file-name" id="live-order-file-name">未选择文件</span>
+							</div>
+							
+							<div class="action-buttons">
+								<button class="btn-success" id="live-order-import-btn" disabled>
+									<span>📥</span> 导入直播订单数据
+								</button>
+								<button class="btn-warning" id="live-order-download-template">
+									<span>📋</span> 下载直播订单模板
+								</button>
+							</div>
+						</div>
+						
+						<div class="import-right-column">
+							<div class="import-help" style="margin-top: 15px;">
+								<h4>直播订单分析导入说明：</h4>
+								<ul>
+									<li>支持格式：CSV、XLSX、XLS</li>
+									<li>必需字段：直播场次标题、场次ID、开播时间、父订单ID、子订单ID</li>
+									<li>时间格式：YYYY-MM-DD HH:MM:SS 或 YYYY/MM/DD HH:MM:SS</li>
+									<li>金额字段会自动转换为数字类型</li>
+									<li>建议先下载模板查看数据格式</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					
+					<div class="import-result" id="live-order-import-result">
+						<div id="live-order-import-result-text"></div>
+						<div class="import-errors" id="live-order-import-errors"></div>
+					</div>
+				</div>
+				
+				<!-- 直播订单分析查询区域 -->
+				<div class="search-filters">
+					<h4>直播订单分析查询</h4>
+					<div class="filter-row">
+						<div class="filter-group">
+							<label for="live-order-search-time">开播时间范围</label>
+							<input type="date" id="live-order-search-time-start"> - 
+							<input type="date" id="live-order-search-time-end">
+						</div>
+						<div class="filter-group">
+							<label for="live-order-search-session">场次ID</label>
+							<input type="text" id="live-order-search-session" placeholder="输入场次ID">
+						</div>
+						<div class="filter-group">
+							<label for="live-order-search-anchor">主播名称</label>
+							<input type="text" id="live-order-search-anchor" placeholder="输入主播名称">
+						</div>
+					</div>
+					<div class="filter-row">
+						<div class="filter-group">
+							<label for="live-order-search-order">订单ID</label>
+							<input type="text" id="live-order-search-order" placeholder="父订单ID或子订单ID">
+						</div>
+						<div class="filter-group">
+							<label for="live-order-search-product">商品标题</label>
+							<input type="text" id="live-order-search-product" placeholder="输入商品标题关键词">
+						</div>
+						<div class="filter-group">
+							<label for="live-order-search-category">商品类目</label>
+							<input type="text" id="live-order-search-category" placeholder="输入商品一级类目">
+						</div>
+					</div>
+					<div class="filter-row">
+						<div class="filter-group">
+							<label for="live-order-search-amount">支付金额范围 (元)</label>
+							<input type="number" id="live-order-search-amount-min" step="0.01" min="0" placeholder="最小"> - 
+							<input type="number" id="live-order-search-amount-max" step="0.01" min="0" placeholder="最大">
+						</div>
+						<div class="filter-group">
+							<label for="live-order-search-refund">退款金额范围 (元)</label>
+							<input type="number" id="live-order-search-refund-min" step="0.01" min="0" placeholder="最小"> - 
+							<input type="number" id="live-order-search-refund-max" step="0.01" min="0" placeholder="最大">
+						</div>
+						<div class="filter-group">
+							<label>&nbsp;</label>
+							<div style="margin-top: 8px;"></div>
+						</div>
+					</div>
+					<div class="action-buttons">
+						<button id="live-order-search-btn" class="reset-btn">
+							<span>🔍</span> 查询
+						</button>
+						<button class="reset-btn" id="live-order-reset-search">
+							<span>🔄</span> 重置
+						</button>
+						<button class="export-btn" id="live-order-export-filtered">导出查询结果 (CSV)</button>
+						<button class="export-btn" id="live-order-export-all">导出所有记录 (CSV)</button>
+					</div>
+				</div>
+				
+				<!-- 直播订单分析批量操作区域 -->
+				<div class="select-all-container">
+					<div class="select-all-options">
+						<div class="select-all-option">
+							<input type="checkbox" id="live-order-select-all-pages"> 
+							<label for="live-order-select-all-pages">全选所有页订单</label>
+						</div>
+						<div class="select-all-option">
+							<input type="checkbox" id="live-order-select-all"> 
+							<label for="live-order-select-all">全选当前页订单</label>
+						</div>
+						<span style="margin-left: 15px; color: #6c757d;">
+							已选择 <span id="live-order-selected-count">0</span> 条记录
+						</span>
+					</div>
+					<button class="bulk-delete-btn" id="live-order-bulk-delete-btn" disabled>批量删除选中订单</button>
+				</div>
+				
+				<!-- 直播订单分析表格 -->
+				<div class="records" style="overflow-x: auto;">
+					<table id="live-order-table">
+						<thead>
+							<tr>
+								<th width="40">
+									<input type="checkbox" id="live-order-table-select-all">
+								</th>
+								<th>直播场次标题</th>
+								<th>场次ID</th>
+								<th>开播时间</th>
+								<th>父订单ID</th>
+								<th>子订单ID</th>
+								<th>代播主播ID</th>
+								<th>代播主播名称</th>
+								<th>商品ID</th>
+								<th>商品标题</th>
+								<th>商品一级类目名称</th>
+								<th>下单时间</th>
+								<th>支付时间</th>
+								<th>支付金额（元）</th>
+								<th>确认收货时间</th>
+								<th>确认收货金额（元）</th>
+								<th>退款时间</th>
+								<th>退款金额（元）</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody id="live-order-body">
+							<tr><td colspan="19" style="text-align:center">暂无直播订单分析数据</td></tr>
+						</tbody>
+					</table>
+				</div>
+				
+				<!-- 直播订单分析分页 -->
+				<div class="pagination" id="live-order-pagination">
+					<button id="live-order-prev-page" disabled>上一页</button>
+					<span class="pagination-info" id="live-order-page-info">第 1 页，共 1 页</span>
+					<button id="live-order-next-page" disabled>下一页</button>
+					<div class="page-jump">
+						<input type="number" id="live-order-jump-page" min="1" placeholder="页码" style="width: 60px; padding: 8px; text-align: center;">
+						<button id="live-order-jump-btn">跳转</button>
+					</div>
+				</div>
+			</div>
+<!-- 主播整体分析 -->
+<div class="platform-content active" id="ZBZTFX-orders">
+    <!-- 分析筛选区域 -->
+    <div class="summary-filters">
+        <div class="filter-row">
+            <div class="filter-group">
+                <label for="anchor-analysis-time-start">开始日期</label>
+                <input type="date" id="anchor-analysis-time-start" class="filter-input">
+            </div>
+            <div class="filter-group">
+                <label for="anchor-analysis-time-end">结束日期</label>
+                <input type="date" id="anchor-analysis-time-end" class="filter-input">
+            </div>
+            <div class="filter-group">
+                <label for="anchor-analysis-anchor">主播筛选</label>
+                <select id="anchor-analysis-anchor" class="filter-select">
+                    <option value="all">全部主播</option>
+                    <!-- 主播选项将动态生成 -->
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>&nbsp;</label>
+                <div class="filter-buttons">
+                    <button id="anchor-analysis-refresh-btn" class="primary-btn">
+                        <span class="btn-icon">🔄</span>刷新分析
+                    </button>
+                    <button id="anchor-analysis-export-btn" class="export-btn">
+                        <span class="btn-icon">📊</span>导出分析报告
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 数据加载状态 -->
+    <div id="anchor-analysis-loading" class="loading-container" style="display: none;">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">正在加载分析数据...</div>
+    </div>
+
+    <!-- 关键指标卡片 -->
+    <div class="summary-cards">
+        <div class="summary-card">
+            <div class="card-icon">📊</div>
+            <div class="card-content">
+                <div class="card-value" id="total-live-sessions">0</div>
+                <div class="card-label">总直播场次</div>
+            </div>
+        </div>
+        <div class="summary-card">
+            <div class="card-icon">👥</div>
+            <div class="card-content">
+                <div class="card-value" id="total-viewers">0</div>
+                <div class="card-label">总观看人数</div>
+            </div>
+        </div>
+        <div class="summary-card">
+            <div class="card-icon">📦</div>
+            <div class="card-content">
+                <div class="card-value" id="total-orders">0</div>
+                <div class="card-label">总订单数</div>
+            </div>
+        </div>
+        <div class="summary-card">
+            <div class="card-icon">💰</div>
+            <div class="card-content">
+                <div class="card-value" id="total-sales">¥0.00</div>
+                <div class="card-label">总销售额</div>
+            </div>
+        </div>
+        <div class="summary-card">
+            <div class="card-icon">⏱️</div>
+            <div class="card-content">
+                <div class="card-value" id="avg-duration">0分钟</div>
+                <div class="card-label">平均直播时长</div>
+            </div>
+        </div>
+        <div class="summary-card">
+            <div class="card-icon">📈</div>
+            <div class="card-content">
+                <div class="card-value" id="conversion-rate">0%</div>
+                <div class="card-label">平均转化率</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 直播中 vs 直播后对比卡片 -->
+    <div class="comparison-cards">
+        <div class="comparison-section">
+            <h4>📺 直播中表现</h4>
+            <div class="comparison-cards-grid">
+                <div class="comparison-card">
+                    <div class="comparison-value" id="live-sales">¥0.00</div>
+                    <div class="comparison-label">直播中销售额</div>
+                </div>
+                <div class="comparison-card">
+                    <div class="comparison-value" id="live-net-sales">¥0.00</div>
+                    <div class="comparison-label">直播中净销售</div>
+                </div>
+                <div class="comparison-card">
+                    <div class="comparison-value" id="live-refund-rate">0%</div>
+                    <div class="comparison-label">直播中退款率</div>
+                </div>
+                <div class="comparison-card">
+                    <div class="comparison-value" id="live-profit">¥0.00</div>
+                    <div class="comparison-label">直播中利润</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="comparison-section">
+            <h4>🛒 直播后表现</h4>
+            <div class="comparison-cards-grid">
+                <div class="comparison-card">
+                    <div class="comparison-value" id="after-sales">¥0.00</div>
+                    <div class="comparison-label">直播后销售额</div>
+                </div>
+                <div class="comparison-card">
+                    <div class="comparison-value" id="after-net-sales">¥0.00</div>
+                    <div class="comparison-label">直播后净销售</div>
+                </div>
+                <div class="comparison-card">
+                    <div class="comparison-value" id="after-refund-rate">0%</div>
+                    <div class="comparison-label">直播后退款率</div>
+                </div>
+                <div class="comparison-card">
+                    <div class="comparison-value" id="after-profit">¥0.00</div>
+                    <div class="comparison-label">直播后利润</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 月度分析图表 -->
+    <div class="summary-charts">
+        <div class="chart-section">
+            <h4>📈 月度趋势分析</h4>
+            <div class="chart-row">
+                <div class="chart-container">
+                    <h5>月度销售额趋势</h5>
+                    <canvas id="monthly-sales-chart" height="300"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h5>月度订单数趋势</h5>
+                    <canvas id="monthly-orders-chart" height="300"></canvas>
+                </div>
+            </div>
+            <div class="chart-row">
+                <div class="chart-container">
+                    <h5>月度观看人数趋势</h5>
+                    <canvas id="monthly-viewers-chart" height="300"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h5>月度转化率趋势</h5>
+                    <canvas id="monthly-conversion-chart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主播表现对比 -->
+    <div class="anchor-comparison">
+        <h4>👨‍💼 主播表现对比</h4>
+        <div class="chart-row">
+            <div class="chart-container">
+                <h5>主播销售额对比</h5>
+                <canvas id="anchor-sales-comparison" height="300"></canvas>
+            </div>
+            <div class="chart-container">
+                <h5>主播订单数对比</h5>
+                <canvas id="anchor-orders-comparison" height="300"></canvas>
+            </div>
+        </div>
+        <div class="chart-row">
+            <div class="chart-container">
+                <h5>主播转化率对比</h5>
+                <canvas id="anchor-conversion-comparison" height="300"></canvas>
+            </div>
+            <div class="chart-container">
+                <h5>主播平均观看时长对比</h5>
+                <canvas id="anchor-duration-comparison" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- 详细分析表格 -->
+    <div class="summary-table-container">
+        <h4>📋 主播整体分析详细数据</h4>
+        <div class="table-controls">
+            <div class="table-search">
+                <input type="text" id="anchor-table-search" placeholder="搜索主播名称..." class="search-input">
+                <span class="search-icon">🔍</span>
+            </div>
+            <div class="table-sort">
+                <label for="anchor-sort-by">排序方式:</label>
+                <select id="anchor-sort-by" class="sort-select">
+                    <option value="anchor">主播</option>
+                    <option value="sales">销售额</option>
+                    <option value="orders">订单数</option>
+                    <option value="conversion">转化率</option>
+                    <option value="viewers">观看人数</option>
+                    <option value="profit">利润</option>
+                </select>
+                <select id="anchor-sort-order" class="sort-order-select">
+                    <option value="asc">升序</option>
+                    <option value="desc" selected>降序</option>
+                </select>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table id="anchor-summary-table" class="summary-table">
+                <thead>
+                    <tr>
+                        <th data-sort="month">月份</th>
+                        <th data-sort="anchor">主播</th>
+                        <th data-sort="sessions">直播场次</th>
+                        <th data-sort="viewers">观看人数</th>
+                        <th data-sort="orders">订单数</th>
+                        <th data-sort="sales">销售额(元)</th>
+                        <th data-sort="duration">总时长(分钟)</th>
+                        <th data-sort="avgDuration">场均时长</th>
+                        <th data-sort="conversion">转化率</th>
+                        <th data-sort="cartRate">加购转化率</th>
+                        <th data-sort="gpm">GPM</th>
+                        <th data-sort="profit">利润</th>
+                    </tr>
+                </thead>
+                <tbody id="anchor-summary-body">
+                    <tr>
+                        <td colspan="12" style="text-align: center; padding: 40px; color: #666;">
+                            <div class="empty-state">
+                                <div class="empty-icon">📊</div>
+                                <div class="empty-text">暂无分析数据</div>
+                                <div class="empty-subtext">请先导入相关数据并点击刷新分析</div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="summary-total">
+                        <td colspan="2">总计/平均</td>
+                        <td id="total-sessions-foot">0</td>
+                        <td id="total-viewers-foot">0</td>
+                        <td id="total-orders-foot">0</td>
+                        <td id="total-sales-foot">¥0.00</td>
+                        <td id="total-duration-foot">0</td>
+                        <td id="avg-duration-foot">0</td>
+                        <td id="avg-conversion-foot">0%</td>
+                        <td id="avg-cart-rate-foot">0%</td>
+                        <td id="avg-gpm-foot">0</td>
+                        <td id="total-profit-foot">¥0.00</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <!-- 数据来源说明 -->
+    <div class="data-source-info">
+        <h4>📚 数据来源说明</h4>
+        <div class="source-cards">
+            <div class="source-card">
+                <div class="source-header">
+                    <div class="source-icon">🎥</div>
+                    <h5>直播记录管理</h5>
+                </div>
+                <p>提供直播场次、时长、主播等基础信息</p>
+                <div class="source-stats">
+                    <span class="source-count" id="source-live-records">0条记录</span>
+                    <span class="source-status" id="live-records-status">✅ 已加载</span>
+                </div>
+            </div>
+            <div class="source-card">
+                <div class="source-header">
+                    <div class="source-icon">📈</div>
+                    <h5>直播分场次分析</h5>
+                </div>
+                <p>提供观看数据、转化率、加购等详细指标</p>
+                <div class="source-stats">
+                    <span class="source-count" id="source-session-analysis">0条记录</span>
+                    <span class="source-status" id="session-analysis-status">✅ 已加载</span>
+                </div>
+            </div>
+            <div class="source-card">
+                <div class="source-header">
+                    <div class="source-icon">🛒</div>
+                    <h5>直播订单分析</h5>
+                </div>
+                <p>提供销售额、订单详情、退款等交易数据</p>
+                <div class="source-stats">
+                    <span class="source-count" id="source-order-analysis">0条记录</span>
+                    <span class="source-status" id="order-analysis-status">✅ 已加载</span>
+                </div>
+            </div>
+            <div class="source-card">
+                <div class="source-header">
+                    <div class="source-icon">💰</div>
+                    <h5>聚水潭账单明细</h5>
+                </div>
+                <p>提供净销售毛利，用于计算利润数据</p>
+                <div class="source-stats">
+                    <span class="source-count" id="source-jstzdmx">0条记录</span>
+                    <span class="source-status" id="jstzdmx-status">✅ 已加载</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+		</div>
+	</div>
+        <!-- 利润汇总明细面板 -->
+        <div class="tab-content" id="Profit-orders">
+			<div class="platform-tabs">
+				<button class="platform-tab active" data-platform="JSTZDMX-records">聚水潭账单明细</button>
+				<button class="platform-tab" data-platform="DPCWMX-orders">店铺财务明细</button>
+				<button class="platform-tab" data-platform="FXXSTJ-orders">分销销售统计</button>
+				<button class="platform-tab" data-platform="JSTZJMX-orders">聚水潭资金明细</button>
+				<button class="platform-tab" data-platform="WLKZMX-orders">物流开支明细</button>
+				<button class="platform-tab" data-platform="ZPBFMX-orders">赠品补发明细</button>
+				<button class="platform-tab" data-platform="ZDZTHZ-orders">账单整体汇总</button>
+			</div>
+			<!-- 聚水潭账单明细子面板 -->
+			<div class="platform-content" id="JSTZDMX-records">
+				<!-- 聚水潭账单明细导入区域 -->
+				<div class="progress-container" id="jushuitan-progress-container" style="display: none; margin: 15px 0;">
+					<div class="progress-bar">
+						<div class="progress-fill" id="jushuitan-progress-fill" style="width: 0%;"></div>
+					</div>
+					<div class="progress-text" id="jushuitan-progress-text">0%</div>
+					<div class="progress-details" id="jushuitan-progress-details">正在准备导入...</div>
+				</div>
+				
+				<div class="import-section">
+					<p>支持导入聚水潭账单明细CSV或XLSX文件，包含内部订单号、线上订单号、销售金额、成本、毛利等完整财务数据。</p>
+					<div class="import-top-row">
+						<div class="import-left-column">
+							<div class="file-input-wrapper">
+								<label for="jushuitan-file-import" class="file-label">选择聚水潭账单明细文件 (CSV/XLSX)</label>
+								<input type="file" id="jushuitan-file-import" accept=".csv,.xlsx,.xls">
+								<span class="file-name" id="jushuitan-file-name">未选择文件</span>
+							</div>
+							
+							<div class="action-buttons">
+								<button class="btn-success" id="jushuitan-import-btn" disabled>
+									<span>📥</span> 导入聚水潭账单明细
+								</button>
+								<button class="btn-warning" id="jushuitan-download-template">
+									<span>📋</span> 下载聚水潭账单明细模板
+								</button>
+							</div>
+						</div>
+						
+						<div class="import-right-column">
+							<div class="import-help" style="margin-top: 15px;">
+								<h4>聚水潭账单明细导入说明：</h4>
+								<ul>
+									<li>支持格式：CSV、XLSX、XLS</li>
+									<li>必需字段：内部订单号、线上订单号、销售金额</li>
+									<li>日期格式：YYYY-MM-DD 或 YYYY/MM/DD</li>
+									<li>金额字段会自动转换为数字类型</li>
+									<li>建议先下载模板查看数据格式</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					
+					<div class="import-result" id="jushuitan-import-result">
+						<div id="jushuitan-import-result-text"></div>
+						<div class="import-errors" id="jushuitan-import-errors"></div>
+					</div>
+				</div>
+				
+				<!-- 聚水潭账单明细查询区域 -->
+				<div class="search-filters">
+					<h4>聚水潭账单明细查询</h4>
+					<div class="filter-row">
+						<div class="filter-group">
+							<label for="jushuitan-search-year">年度</label>
+							<select id="jushuitan-search-year">
+								<option value="">全部年度</option>
+								<option value="2024">2024年</option>
+								<option value="2023">2023年</option>
+								<option value="2022">2022年</option>
+								<option value="2021">2021年</option>
+							</select>
+						</div>
+						<div class="filter-group">
+							<label for="jushuitan-search-month">月份</label>
+							<select id="jushuitan-search-month">
+								<option value="">全部月份</option>
+								<option value="1">1月</option>
+								<option value="2">2月</option>
+								<option value="3">3月</option>
+								<option value="4">4月</option>
+								<option value="5">5月</option>
+								<option value="6">6月</option>
+								<option value="7">7月</option>
+								<option value="8">8月</option>
+								<option value="9">9月</option>
+								<option value="10">10月</option>
+								<option value="11">11月</option>
+								<option value="12">12月</option>
+							</select>
+						</div>
+						<div class="filter-group">
+							<label for="jushuitan-search-internal-order-no">内部订单号</label>
+							<input type="text" id="jushuitan-search-internal-order-no" placeholder="输入内部订单号">
+						</div>
+						<div class="filter-group">
+							<label for="jushuitan-search-online-order-no">线上订单号</label>
+							<input type="text" id="jushuitan-search-online-order-no" placeholder="输入线上订单号">
+						</div>
+					</div>
+					<div class="filter-row">
+						<div class="filter-group">
+							<label for="jushuitan-search-shop">店铺</label>
+							<select id="jushuitan-search-shop">
+								<option value="">全部店铺</option>
+								<!-- 店铺选项将动态生成 -->
+							</select>
+						</div>
+						<div class="filter-group">
+							<label for="jushuitan-search-store-site">商店站点</label>
+							<select id="jushuitan-search-store-site">
+								<option value="">全部站点</option>
+								<!-- 商店站点选项将动态生成 -->
+							</select>
+						</div>
+						<div class="filter-group">
+							<label>&nbsp;</label>
+							<div style="margin-top: 8px;"></div>
+						</div>
+						<div class="filter-group">
+							<label>&nbsp;</label>
+							<div style="margin-top: 8px;"></div>
+						</div>
+					</div>
+					<div class="action-buttons">
+						<button id="jushuitan-search-btn" class="reset-btn">
+							<span>🔍</span> 查询
+						</button>
+						<button class="reset-btn" id="jushuitan-reset-search">
+							<span>🔄</span> 重置
+						</button>
+						<button class="export-btn" id="jushuitan-export-filtered">导出查询结果 (CSV)</button>
+						<button class="export-btn" id="jushuitan-export-all">导出所有记录 (CSV)</button>
+					</div>
+				</div>
+				
+				<!-- 聚水潭账单明细批量操作区域 -->
+				<div class="select-all-container">
+					<div class="select-all-options">
+						<div class="select-all-option">
+							<input type="checkbox" id="jushuitan-select-all-pages"> 
+							<label for="jushuitan-select-all-pages">全选所有页记录</label>
+						</div>
+						<div class="select-all-option">
+							<input type="checkbox" id="jushuitan-select-all"> 
+							<label for="jushuitan-select-all">全选当前页记录</label>
+						</div>
+						<span style="margin-left: 15px; color: #6c757d;">
+							已选择 <span id="jushuitan-selected-count">0</span> 条记录
+						</span>
+					</div>
+					<button class="bulk-delete-btn" id="jushuitan-bulk-delete-btn" disabled>
+						<span>🗑️</span> 批量删除选中记录
+					</button>
+				</div>
+				
+				<!-- 聚水潭账单明细表格 -->
+				<div class="records" style="overflow-x: auto;">
+					<table id="jushuitan-orders-table">
+						<thead>
+							<tr>
+								<th width="40">
+									<input type="checkbox" id="jushuitan-table-select-all">
+								</th>
+								<th>内部订单号</th>
+								<th>标记多标签</th>
+								<th>线上订单号</th>
+								<th>分销商</th>
+								<th>店铺</th>
+								<th>买家账号</th>
+								<th>卖家备注</th>
+								<th>确认收货日期</th>
+								<th>款式编码</th>
+								<th>商品编码</th>
+								<th>销售金额</th>
+								<th>销售成本</th>
+								<th>实发采购价</th>
+								<th>净销售毛利</th>
+								<th>销售毛利</th>
+								<th>销售毛利率</th>
+								<th>当期退货金额</th>
+								<th>当期退货成本</th>
+								<th>当期退货数量</th>
+								<th>当期实退金额</th>
+								<th>当期实退成本</th>
+								<th>当期实退数量</th>
+								<th>销售数量</th>
+								<th>实发数量</th>
+								<th>实发金额</th>
+								<th>实发成本</th>
+								<th>成本价</th>
+								<th>已付金额</th>
+								<th>应付金额</th>
+								<th>售价</th>
+								<th>基本售价</th>
+								<th>基本金额</th>
+								<th>聚水潭资金</th>
+								<th>备注辅助</th>
+								<th>订单类型</th>
+								<th>省</th>
+								<th>市</th>
+								<th>区县</th>
+								<th>商店站点</th>
+								<th>售后分类</th>
+								<th>问题类型</th>
+								<th>商品状态</th>
+								<th>退款状态</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody id="jushuitan-orders-body">
+							<tr><td colspan="45" style="text-align:center">暂无聚水潭账单明细数据</td></tr>
+						</tbody>
+					</table>
+				</div>
+				
+				<!-- 聚水潭账单明细分页 -->
+				<div class="pagination" id="jushuitan-pagination">
+					<button id="jushuitan-prev-page" disabled>上一页</button>
+					<span class="pagination-info" id="jushuitan-page-info">第 1 页，共 1 页</span>
+					<button id="jushuitan-next-page" disabled>下一页</button>
+					<div class="page-jump">
+						<input type="number" id="jushuitan-jump-page" min="1" placeholder="页码" style="width: 60px; padding: 8px; text-align: center;">
+						<button id="jushuitan-jump-btn">跳转</button>
+					</div>
+				</div>
+			</div>
+			<!-- 店铺财务明细子面板 -->
+			<div class="platform-content" id="DPCWMX-orders">
+				<!-- 店铺财务明细导入区域 -->
+				<div class="progress-container" id="shop-finance-progress-container" style="display: none; margin: 15px 0;">
+					<div class="progress-bar">
+						<div class="progress-fill" id="shop-finance-progress-fill" style="width: 0%;"></div>
+					</div>
+					<div class="progress-text" id="shop-finance-progress-text">0%</div>
+					<div class="progress-details" id="shop-finance-progress-details">正在准备导入...</div>
+				</div>
+				
+				<div class="import-section">
+					<p>支持导入店铺财务明细CSV或XLSX文件，包含账务流水号、业务流水号、商户订单号、商品名称、发生时间、对方账号、收入金额、支出金额等完整财务数据。</p>
+					<div class="import-top-row">
+						<div class="import-left-column">
+							<div class="file-input-wrapper">
+								<label for="shop-finance-file-import" class="file-label">选择店铺财务明细文件 (CSV/XLSX)</label>
+								<input type="file" id="shop-finance-file-import" accept=".csv,.xlsx,.xls">
+								<span class="file-name" id="shop-finance-file-name">未选择文件</span>
+							</div>
+							
+							<div class="action-buttons">
+								<button class="btn-success" id="shop-finance-import-btn" disabled>
+									<span>📥</span> 导入店铺财务明细
+								</button>
+								<button class="btn-warning" id="shop-finance-download-template">
+									<span>📋</span> 下载店铺财务明细模板
+								</button>
+							</div>
+						</div>
+						
+						<div class="import-right-column">
+							<div class="import-help" style="margin-top: 15px;">
+								<h4>店铺财务明细导入说明：</h4>
+								<ul>
+									<li>支持格式：CSV、XLSX、XLS</li>
+									<li>必需字段：账务流水号、发生时间、收入金额、支出金额</li>
+									<li>日期格式：YYYY-MM-DD 或 YYYY/MM/DD</li>
+									<li>金额字段会自动转换为数字类型</li>
+									<li>系统会自动识别交易渠道、店铺账号和辅助备注</li>
+									<li>建议先下载模板查看数据格式</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					
+					<div class="import-result" id="shop-finance-import-result">
+						<div id="shop-finance-import-result-text"></div>
+						<div class="import-errors" id="shop-finance-import-errors"></div>
+					</div>
+				</div>
+				
+				<!-- 店铺财务明细查询区域 -->
+				<div class="search-filters">
+					<h4>店铺财务明细查询</h4>
+					<div class="filter-row">
+						<div class="filter-group">
+							<label for="shop-finance-search-year">年度</label>
+							<select id="shop-finance-search-year">
+								<option value="">全部年度</option>
+								<option value="2024">2024年</option>
+								<option value="2023">2023年</option>
+								<option value="2022">2022年</option>
+								<option value="2021">2021年</option>
+							</select>
+						</div>
+						<div class="filter-group">
+							<label for="shop-finance-search-month">月份</label>
+							<select id="shop-finance-search-month">
+								<option value="">全部月份</option>
+								<option value="1">1月</option>
+								<option value="2">2月</option>
+								<option value="3">3月</option>
+								<option value="4">4月</option>
+								<option value="5">5月</option>
+								<option value="6">6月</option>
+								<option value="7">7月</option>
+								<option value="8">8月</option>
+								<option value="9">9月</option>
+								<option value="10">10月</option>
+								<option value="11">11月</option>
+								<option value="12">12月</option>
+							</select>
+						</div>
+						<div class="filter-group">
+							<label for="shop-finance-search-channel">交易渠道</label>
+							<select id="shop-finance-search-channel">
+								<option value="">全部渠道</option>
+								<option value="支付宝">支付宝</option>
+								<option value="拼多多">拼多多</option>
+								<option value="抖音">抖音</option>
+								<option value="快手">快手</option>
+								<option value="微信">微信</option>
+								<option value="小红书">小红书</option>
+							</select>
+						</div>
+						<div class="filter-group">
+							<label for="shop-finance-search-shop">店铺账号</label>
+							<select id="shop-finance-search-shop">
+								<option value="">全部店铺</option>
+								<!-- 店铺选项将动态生成 -->
+							</select>
+						</div>
+					</div>
+					<div class="filter-row">
+						<div class="filter-group">
+							<label for="shop-finance-search-remark">辅助备注</label>
+							<select id="shop-finance-search-remark">
+								<option value="">全部备注</option>
+								<option value="淘宝客">淘宝客</option>
+								<option value="运费险">运费险</option>
+								<option value="服务费">服务费</option>
+								<option value="红包">红包</option>
+								<option value="小额打款">小额打款</option>
+								<option value="公益">公益</option>
+								<option value="赔付">赔付</option>
+								<option value="订单险">订单险</option>
+							</select>
+						</div>
+						<div class="filter-group">
+							<label for="shop-finance-search-account-no">账务流水号</label>
+							<input type="text" id="shop-finance-search-account-no" placeholder="输入账务流水号">
+						</div>
+						<div class="filter-group">
+							<label for="shop-finance-search-business-no">业务流水号</label>
+							<input type="text" id="shop-finance-search-business-no" placeholder="输入业务流水号">
+						</div>
+						<div class="filter-group">
+							<label for="shop-finance-search-merchant-no">商户订单号</label>
+							<input type="text" id="shop-finance-search-merchant-no" placeholder="输入商户订单号">
+						</div>
+					</div>
+					<div class="action-buttons">
+						<button id="shop-finance-search-btn" class="reset-btn">
+							<span>🔍</span> 查询
+						</button>
+						<button class="reset-btn" id="shop-finance-reset-search">
+							<span>🔄</span> 重置
+						</button>
+						<button class="export-btn" id="shop-finance-export-filtered">导出查询结果 (CSV)</button>
+						<button class="export-btn" id="shop-finance-export-all">导出所有记录 (CSV)</button>
+					</div>
+				</div>
+				
+				<!-- 店铺财务明细批量操作区域 -->
+				<div class="select-all-container">
+					<div class="select-all-options">
+						<div class="select-all-option">
+							<input type="checkbox" id="shop-finance-select-all-pages"> 
+							<label for="shop-finance-select-all-pages">全选所有页记录</label>
+						</div>
+						<div class="select-all-option">
+							<input type="checkbox" id="shop-finance-select-all"> 
+							<label for="shop-finance-select-all">全选当前页记录</label>
+						</div>
+						<span style="margin-left: 15px; color: #6c757d;">
+							已选择 <span id="shop-finance-selected-count">0</span> 条记录
+						</span>
+					</div>
+					<button class="bulk-delete-btn" id="shop-finance-bulk-delete-btn" disabled>
+						<span>🗑️</span> 批量删除选中记录
+					</button>
+				</div>
+				
+				<!-- 店铺财务明细表格 -->
+				<div class="records" style="overflow-x: auto;">
+					<table id="shop-finance-orders-table">
+						<thead>
+							<tr>
+								<th width="40">
+									<input type="checkbox" id="shop-finance-table-select-all">
+								</th>
+								<th>账务流水号</th>
+								<th>业务流水号</th>
+								<th>商户订单号</th>
+								<th>商品名称</th>
+								<th>发生时间</th>
+								<th>对方账号</th>
+								<th>收入金额（+元）</th>
+								<th>支出金额（-元）</th>
+								<th>账户余额（元）</th>
+								<th>交易渠道</th>
+								<th>业务类型/动账场景</th>
+								<th>备注</th>
+								<th>业务描述</th>
+								<th>店铺账号</th>
+								<th>辅助备注</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody id="shop-finance-orders-body">
+							<tr><td colspan="17" style="text-align:center">暂无店铺财务明细数据</td></tr>
+						</tbody>
+					</table>
+				</div>
+				
+				<!-- 店铺财务明细分页 -->
+				<div class="pagination" id="shop-finance-pagination">
+					<button id="shop-finance-prev-page" disabled>上一页</button>
+					<span class="pagination-info" id="shop-finance-page-info">第 1 页，共 1 页</span>
+					<button id="shop-finance-next-page" disabled>下一页</button>
+					<div class="page-jump">
+						<input type="number" id="shop-finance-jump-page" min="1" placeholder="页码" style="width: 60px; padding: 8px; text-align: center;">
+						<button id="shop-finance-jump-btn">跳转</button>
+					</div>
+				</div>
+			</div>
+			<!-- 分销销售统计子面板 -->
+			<div class="platform-content" id="FXXSTJ-orders">
+				<!-- 分销销售统计导入区域 -->
+				<div class="progress-container" id="distribution-progress-container" style="display: none; margin: 15px 0;">
+					<div class="progress-bar">
+						<div class="progress-fill" id="distribution-progress-fill" style="width: 0%;"></div>
+					</div>
+					<div class="progress-text" id="distribution-progress-text">0%</div>
+					<div class="progress-details" id="distribution-progress-details">正在准备导入...</div>
+				</div>
+				
+				<div class="import-section">
+					<p>支持导入分销销售统计CSV或XLSX文件，包含店铺名称、商店站点、内部订单号、线上订单号、发货日期、分销金额等完整销售数据。</p>
+					<div class="import-top-row">
+						<div class="import-left-column">
+							<div class="file-input-wrapper">
+								<label for="distribution-file-import" class="file-label">选择分销销售统计文件 (CSV/XLSX)</label>
+								<input type="file" id="distribution-file-import" accept=".csv,.xlsx,.xls">
+								<span class="file-name" id="distribution-file-name">未选择文件</span>
+							</div>
+							
+							<div class="action-buttons">
+								<button class="btn-success" id="distribution-import-btn" disabled>
+									<span>📥</span> 导入分销销售数据
+								</button>
+								<button class="btn-warning" id="distribution-download-template">
+									<span>📋</span> 下载分销销售模板
+								</button>
+							</div>
+						</div>
+						
+						<div class="import-right-column">
+							<div class="import-help" style="margin-top: 15px;">
+								<h4>分销销售统计导入说明：</h4>
+								<ul>
+									<li>支持格式：CSV、XLSX、XLS</li>
+									<li>必需字段：内部订单号、店铺名称、发货日期</li>
+									<li>日期格式：YYYY-MM-DD 或 YYYY/MM/DD</li>
+									<li>金额字段会自动转换为数字类型</li>
+									<li>系统会自动识别店铺名称、商店站点和付款状态</li>
+									<li>重复数据会自动覆盖更新</li>
+									<li>建议先下载模板查看数据格式</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					
+					<div class="import-result" id="distribution-import-result">
+						<div id="distribution-import-result-text"></div>
+						<div class="import-errors" id="distribution-import-errors"></div>
+					</div>
+				</div>
+				
+				<!-- 分销销售统计查询区域 -->
+				<div class="search-filters">
+					<h4>分销销售统计查询</h4>
+					<div class="filter-row">
+						<div class="filter-group">
+							<label for="distribution-search-year">发货年度</label>
+							<select id="distribution-search-year">
+								<option value="">全部年度</option>
+								<!-- 年度选项将动态生成 -->
+							</select>
+						</div>
+						<div class="filter-group">
+							<label for="distribution-search-month">发货月份</label>
+							<select id="distribution-search-month">
+								<option value="">全部月份</option>
+								<option value="01">1月</option>
+								<option value="02">2月</option>
+								<option value="03">3月</option>
+								<option value="04">4月</option>
+								<option value="05">5月</option>
+								<option value="06">6月</option>
+								<option value="07">7月</option>
+								<option value="08">8月</option>
+								<option value="09">9月</option>
+								<option value="10">10月</option>
+								<option value="11">11月</option>
+								<option value="12">12月</option>
+							</select>
+						</div>
+						<div class="filter-group">
+							<label for="distribution-search-shop">店铺名称</label>
+							<select id="distribution-search-shop">
+								<option value="">全部店铺</option>
+								<!-- 店铺选项将动态生成 -->
+							</select>
+						</div>
+						<div class="filter-group">
+							<label for="distribution-search-store-site">商店站点</label>
+							<select id="distribution-search-store-site">
+								<option value="">全部站点</option>
+								<!-- 商店站点选项将动态生成 -->
+							</select>
+						</div>
+					</div>
+					<div class="filter-row">
+						<div class="filter-group">
+							<label for="distribution-search-payment-status">付款状态</label>
+							<select id="distribution-search-payment-status">
+								<option value="">全部状态</option>
+								<option value="已付款">已付款</option>
+								<option value="未付款">未付款</option>
+								<option value="部分付款">部分付款</option>
+								<option value="已退款">已退款</option>
+							</select>
+						</div>
+						<div class="filter-group">
+							<label for="distribution-search-internal-order-no">内部订单号</label>
+							<input type="text" id="distribution-search-internal-order-no" placeholder="输入内部订单号">
+						</div>
+						<div class="filter-group">
+							<label for="distribution-search-online-order-no">线上订单号</label>
+							<input type="text" id="distribution-search-online-order-no" placeholder="输入线上订单号">
+						</div>
+						<div class="filter-group">
+							<label for="distribution-search-product-code">商品编码</label>
+							<input type="text" id="distribution-search-product-code" placeholder="输入商品编码">
+						</div>
+					</div>
+					<div class="action-buttons">
+						<button id="distribution-search-btn" class="reset-btn">
+							<span>🔍</span> 查询
+						</button>
+						<button class="reset-btn" id="distribution-reset-search">
+							<span>🔄</span> 重置
+						</button>
+						<button class="export-btn" id="distribution-export-filtered">导出查询结果 (CSV)</button>
+						<button class="export-btn" id="distribution-export-all">导出所有记录 (CSV)</button>
+					</div>
+				</div>
+				
+				<!-- 分销销售统计批量操作区域 -->
+				<div class="select-all-container">
+					<div class="select-all-options">
+						<div class="select-all-option">
+							<input type="checkbox" id="distribution-select-all-pages"> 
+							<label for="distribution-select-all-pages">全选所有页记录</label>
+						</div>
+						<div class="select-all-option">
+							<input type="checkbox" id="distribution-select-all"> 
+							<label for="distribution-select-all">全选当前页记录</label>
+						</div>
+						<span style="margin-left: 15px; color: #6c757d;">
+							已选择 <span id="distribution-selected-count">0</span> 条记录
+						</span>
+					</div>
+					<button class="bulk-delete-btn" id="distribution-bulk-delete-btn" disabled>
+						<span>🗑️</span> 批量删除选中记录
+					</button>
+				</div>
+				
+				<!-- 分销销售统计表格 -->
+				<div class="records" style="overflow-x: auto;">
+					<table id="distribution-orders-table">
+						<thead>
+							<tr>
+								<th width="40">
+									<input type="checkbox" id="distribution-table-select-all">
+								</th>
+								<th>店铺名称</th>
+								<th>商店站点</th>
+								<th>订单状态</th>
+								<th>订单类型</th>
+								<th>内部订单号</th>
+								<th>线上订单号</th>
+								<th>供销商订单号</th>
+								<th>付款状态</th>
+								<th>订单日期</th>
+								<th>付款日期</th>
+								<th>发货日期</th>
+								<th>买家账号</th>
+								<th>收货省</th>
+								<th>收货市</th>
+								<th>收货县</th>
+								<th>快递公司</th>
+								<th>快递单号</th>
+								<th>售后登记日期</th>
+								<th>售后确认日期</th>
+								<th>售后分类</th>
+								<th>问题类型</th>
+								<th>商品编码</th>
+								<th>款式编码</th>
+								<th>颜色</th>
+								<th>尺码</th>
+								<th>商品名称</th>
+								<th>销售数量</th>
+								<th>分销金额</th>
+								<th>分销单价</th>
+								<th>优惠</th>
+								<th>运费</th>
+								<th>退货数量</th>
+								<th>实退数量</th>
+								<th>退货金额</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody id="distribution-orders-body">
+							<tr><td colspan="35" style="text-align:center">暂无分销销售统计数据</td></tr>
+						</tbody>
+					</table>
+				</div>
+				
+				<!-- 分销销售统计分页 -->
+				<div class="pagination" id="distribution-pagination">
+					<button id="distribution-prev-page" disabled>上一页</button>
+					<span class="pagination-info" id="distribution-page-info">第 1 页，共 1 页</span>
+					<button id="distribution-next-page" disabled>下一页</button>
+					<div class="page-jump">
+						<input type="number" id="distribution-jump-page" min="1" placeholder="页码" style="width: 60px; padding: 8px; text-align: center;">
+						<button id="distribution-jump-btn">跳转</button>
+					</div>
+				</div>
+			</div>
+			<!-- 聚水潭资金明细子面板 -->
+			<div class="platform-content" id="JSTZJMX-orders">
+				<!-- 聚水潭资金明细导入区域 -->
+				<div class="progress-container" id="jushuitan-fund-progress-container" style="display: none; margin: 15px 0;">
+					<div class="progress-bar">
+						<div class="progress-fill" id="jushuitan-fund-progress-fill" style="width: 0%;"></div>
+					</div>
+					<div class="progress-text" id="jushuitan-fund-progress-text">0%</div>
+					<div class="progress-details" id="jushuitan-fund-progress-details">正在准备导入...</div>
+				</div>
+				
+				<div class="import-section">
+					<p>支持导入聚水潭资金明细CSV或XLSX文件，包含内部支付单号、支付时间、类型、金额、交易后余额等完整资金数据。</p>
+					<div class="import-top-row">
+						<div class="import-left-column">
+							<div class="file-input-wrapper">
+								<label for="jushuitan-fund-file-import" class="file-label">选择聚水潭资金明细文件 (CSV/XLSX)</label>
+								<input type="file" id="jushuitan-fund-file-import" accept=".csv,.xlsx,.xls">
+								<span class="file-name" id="jushuitan-fund-file-name">未选择文件</span>
+							</div>
+							
+							<div class="action-buttons">
+								<button class="btn-success" id="jushuitan-fund-import-btn" disabled>
+									<span>📥</span> 导入聚水潭资金明细
+								</button>
+								<button class="btn-warning" id="jushuitan-fund-download-template">
+									<span>📋</span> 下载聚水潭资金明细模板
+								</button>
+							</div>
+						</div>
+						
+						<div class="import-right-column">
+							<div class="import-help" style="margin-top: 15px;">
+								<h4>聚水潭资金明细导入说明：</h4>
+								<ul>
+									<li>支持格式：CSV、XLSX、XLS</li>
+									<li>必需字段：内部支付单号、支付时间、类型、金额</li>
+									<li>日期格式：YYYY-MM-DD 或 YYYY/MM/DD</li>
+									<li>金额字段会自动转换为数字类型</li>
+									<li>建议先下载模板查看数据格式</li>
+									<li>系统会自动识别并去重重复记录</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					
+					<div class="import-result" id="jushuitan-fund-import-result">
+						<div id="jushuitan-fund-import-result-text"></div>
+						<div class="import-errors" id="jushuitan-fund-import-errors"></div>
+					</div>
+				</div>
+				
+				<!-- 聚水潭资金明细查询区域 -->
+				<div class="search-filters">
+					<h4>聚水潭资金明细查询</h4>
+					<div class="filter-row">
+						<div class="filter-group">
+							<label for="jushuitan-fund-search-year">年度</label>
+							<select id="jushuitan-fund-search-year">
+								<option value="">全部年度</option>
+								<option value="2024">2024年</option>
+								<option value="2023">2023年</option>
+								<option value="2022">2022年</option>
+								<option value="2021">2021年</option>
+							</select>
+						</div>
+						<div class="filter-group">
+							<label for="jushuitan-fund-search-month">月份</label>
+							<select id="jushuitan-fund-search-month">
+								<option value="">全部月份</option>
+								<option value="1">1月</option>
+								<option value="2">2月</option>
+								<option value="3">3月</option>
+								<option value="4">4月</option>
+								<option value="5">5月</option>
+								<option value="6">6月</option>
+								<option value="7">7月</option>
+								<option value="8">8月</option>
+								<option value="9">9月</option>
+								<option value="10">10月</option>
+								<option value="11">11月</option>
+								<option value="12">12月</option>
+							</select>
+						</div>
+						<div class="filter-group">
+							<label for="jushuitan-fund-search-type">类型</label>
+							<select id="jushuitan-fund-search-type">
+								<option value="">全部类型</option>
+								<!-- 类型选项将动态生成 -->
+							</select>
+						</div>
+						<div class="filter-group">
+							<label for="jushuitan-fund-search-payment-method">支付方式</label>
+							<select id="jushuitan-fund-search-payment-method">
+								<option value="">全部支付方式</option>
+								<!-- 支付方式选项将动态生成 -->
+							</select>
+						</div>
+					</div>
+					<div class="filter-row">
+						<div class="filter-group">
+							<label for="jushuitan-fund-search-shop">店铺</label>
+							<select id="jushuitan-fund-search-shop">
+								<option value="">全部店铺</option>
+								<!-- 店铺选项将动态生成 -->
+							</select>
+						</div>
+						<div class="filter-group">
+							<label for="jushuitan-fund-search-supplier">供应商名称</label>
+							<select id="jushuitan-fund-search-supplier">
+								<option value="">全部供应商</option>
+								<!-- 供应商选项将动态生成 -->
+							</select>
+						</div>
+						<div class="filter-group">
+							<label for="jushuitan-fund-search-internal-payment-no">内部支付单号</label>
+							<input type="text" id="jushuitan-fund-search-internal-payment-no" placeholder="输入内部支付单号">
+						</div>
+						<div class="filter-group">
+							<label for="jushuitan-fund-search-order-no">订单号</label>
+							<input type="text" id="jushuitan-fund-search-order-no" placeholder="输入订单号">
+						</div>
+					</div>
+					<div class="action-buttons">
+						<button id="jushuitan-fund-search-btn" class="reset-btn">
+							<span>🔍</span> 查询
+						</button>
+						<button class="reset-btn" id="jushuitan-fund-reset-search">
+							<span>🔄</span> 重置
+						</button>
+						<button class="export-btn" id="jushuitan-fund-export-filtered">导出查询结果 (Excel)</button>
+						<button class="export-btn" id="jushuitan-fund-export-all">导出所有记录 (Excel)</button>
+					</div>
+				</div>
+				
+				<!-- 聚水潭资金明细批量操作区域 -->
+				<div class="select-all-container">
+					<div class="select-all-options">
+						<div class="select-all-option">
+							<input type="checkbox" id="jushuitan-fund-select-all-pages"> 
+							<label for="jushuitan-fund-select-all-pages">全选所有页记录</label>
+						</div>
+						<div class="select-all-option">
+							<input type="checkbox" id="jushuitan-fund-select-all"> 
+							<label for="jushuitan-fund-select-all">全选当前页记录</label>
+						</div>
+						<span style="margin-left: 15px; color: #6c757d;">
+							已选择 <span id="jushuitan-fund-selected-count">0</span> 条记录
+						</span>
+					</div>
+					<button class="bulk-delete-btn" id="jushuitan-fund-bulk-delete-btn" disabled>
+						<span>🗑️</span> 批量删除选中记录
+					</button>
+				</div>
+				
+				<!-- 聚水潭资金明细表格 -->
+				<div class="records" style="overflow-x: auto;">
+					<table id="jushuitan-fund-details-table">
+						<thead>
+							<tr>
+								<th width="40">
+									<input type="checkbox" id="jushuitan-fund-table-select-all">
+								</th>
+								<th>内部支付单号</th>
+								<th>支付时间</th>
+								<th>类型</th>
+								<th>金额</th>
+								<th>交易后余额</th>
+								<th>支付单号</th>
+								<th>状态</th>
+								<th>支付方式</th>
+								<th>备注</th>
+								<th>审核时间</th>
+								<th>订单号</th>
+								<th>快递公司</th>
+								<th>快递单号</th>
+								<th>商品金额</th>
+								<th>商品数量</th>
+								<th>优惠/佣金</th>
+								<th>运费</th>
+								<th>采购金额</th>
+								<th>买家下单金额</th>
+								<th>订单状态</th>
+								<th>发货时间</th>
+								<th>结算状态</th>
+								<th>店铺</th>
+								<th>供应商名称</th>
+								<th>线上订单号</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody id="jushuitan-fund-details-body">
+							<tr><td colspan="27" style="text-align:center">暂无聚水潭资金明细数据</td></tr>
+						</tbody>
+					</table>
+				</div>
+				
+				<!-- 聚水潭资金明细分页 -->
+				<div class="pagination" id="jushuitan-fund-pagination">
+					<button id="jushuitan-fund-prev-page" disabled>上一页</button>
+					<span class="pagination-info" id="jushuitan-fund-page-info">第 1 页，共 1 页</span>
+					<button id="jushuitan-fund-next-page" disabled>下一页</button>
+					<div class="page-jump">
+						<input type="number" id="jushuitan-fund-jump-page" min="1" placeholder="页码" style="width: 60px; padding: 8px; text-align: center;">
+						<button id="jushuitan-fund-jump-btn">跳转</button>
+					</div>
+				</div>
+			</div>
+			<!-- 物流开支明细管理容器 -->
+			<div id="WLKZMX-orders" class="platform-content">
+				<!-- 导入区域 -->
+				<div class="import-section">
+					<p>支持导入物流开支明细CSV或XLSX文件，包含账单结算对象编码、运单号码、扫描时间、运费等完整物流开支数据。</p>
+					<div class="import-top-row">
+						<div class="import-left-column">
+							<div class="file-input-wrapper">
+								<label for="wlkzmx-fund-file-import" class="file-label">选择物流开支文件 (CSV/XLSX)</label>
+								<input type="file" id="wlkzmx-fund-file-import" accept=".csv,.xlsx,.xls">
+								<span class="file-name" id="wlkzmx-fund-file-import">未选择文件</span>
+							</div>
+							
+							<div class="action-buttons">
+								<button class="btn-success" id="wlkzmx-fund-import-btn" disabled>
+									<span>📥</span> 导入物流开支数据
+								</button>
+								<button class="btn-warning" id="wlkzmx-fund-download-template">
+									<span>📋</span> 下载物流开支模板
+								</button>
+							</div>
+						</div>
+						
+						<div class="import-right-column">
+							<div class="import-help" style="margin-top: 15px;">
+								<h4>物流开支明细导入说明：</h4>
+								<ul>
+									<li>支持格式：CSV、XLSX、XLS</li>
+									<li>必需字段：运单号码、扫描时间、运费</li>
+									<li>日期格式：YYYY-MM-DD 或 YYYY/MM/DD</li>
+									<li>金额字段会自动转换为数字类型</li>
+									<li>建议先下载模板查看数据格式</li>
+									<li>系统会自动识别并去重重复记录</li>
+								</ul>
+							</div>
+						</div>
+						<div id="wlkzmx-fund-progress-container" style="display: none;">
+							<div class="progress-bar">
+								<div class="progress-fill" id="wlkzmx-fund-progress-fill" style="width: 0%;"></div>
+							</div>
+							<div class="progress-text" id="wlkzmx-fund-progress-text">0%</div>
+							<div class="progress-details" id="wlkzmx-fund-progress-details">正在准备导入...</div>
+						</div>
+					</div>
+				</div>
+				
+				<!-- 查询区域 -->
+				<div class="search-filters">
+					<h3>数据查询</h3>
+					<div class="filter-row">
+						<div class="filter-group">
+							<label for="wlkzmx-fund-search-year">扫描年度:</label>
+							<select id="wlkzmx-fund-search-year">
+								<option value="">全部年度</option>
+								<option value="2024">2024年</option>
+								<option value="2023">2023年</option>
+								<option value="2022">2022年</option>
+								<option value="2021">2021年</option>
+							</select>
+						</div>
+						<div class="filter-group">
+							<label for="wlkzmx-fund-search-month">扫描月份:</label>
+							<select id="wlkzmx-fund-search-month">
+								<option value="">全部月份</option>
+								<option value="1">1月</option>
+								<option value="2">2月</option>
+								<option value="3">3月</option>
+								<option value="4">4月</option>
+								<option value="5">5月</option>
+								<option value="6">6月</option>
+								<option value="7">7月</option>
+								<option value="8">8月</option>
+								<option value="9">9月</option>
+								<option value="10">10月</option>
+								<option value="11">11月</option>
+								<option value="12">12月</option>
+							</select>
+						</div>
+						<div class="filter-group">
+							<label>运单号码:</label>
+							<input type="text" id="wlkzmx-fund-search-waybill" placeholder="输入运单号码">
+						</div>
+						<div class="filter-group">
+							<label>物料发放名称:</label>
+							<select id="wlkzmx-fund-search-material">
+								<option value="">全部物料</option>
+							</select>
+						</div>
+						<div class="action-buttons">
+							<button id="wlkzmx-fund-search-btn" class="reset-btn">
+								<span>🔍</span> 查询
+							</button>
+							<button class="reset-btn" id="wlkzmx-fund-reset-search">
+								<span>🔄</span> 重置
+							</button>
+						</div>
+					</div>
+				</div>
+				
+				<!-- 批量操作区域 -->
+				<div class="select-all-container">
+					<div class="select-all-options">
+						<div class="select-all-option">
+							<input type="checkbox" id="wlkzmx-fund-select-all-pages"> 
+							<label for="wlkzmx-fund-select-all-pages">全选所有页记录</label>
+						</div>
+						<div class="select-all-option">
+							<input type="checkbox" id="wlkzmx-fund-select-all"> 
+							<label for="wlkzmx-fund-select-all">全选当前页记录</label>
+						</div>
+						<span style="margin-left: 15px; color: #6c757d;">
+							已选择 <span id="wlkzmx-fund-selected-count">0</span> 条记录
+						</span>
+					</div>
+					<button id="wlkzmx-fund-bulk-delete-btn" disabled class="btn-danger">
+						<span>🗑️</span> 批量删除选中记录
+					</button>
+				</div>
+				
+				<!-- 数据表格区域 -->
+				<div class="records" style="overflow-x: auto;">
+					<table id="wlkzmx-fund-details-table">
+						<thead>
+							<tr>
+								<th width="40">
+									<input type="checkbox" id="wlkzmx-fund-table-select-all">
+								</th>
+								<th>账单结算对象编码</th>
+								<th>账单结算对象名称</th>
+								<th>运单号码</th>
+								<th>扫描时间</th>
+								<th>备注</th>
+								<th>面单类型</th>
+								<th>计费重量(kg)</th>
+								<th>计费省份</th>
+								<th>计费目的地</th>
+								<th>计费时效</th>
+								<th>计费结算对象编码</th>
+								<th>计费结算对象名称</th>
+								<th>计费时间</th>
+								<th>总部结算计费时间</th>
+								<th>总部结算计费目的地</th>
+								<th>总部结算计费省份</th>
+								<th>总部结算计费重量(kg)</th>
+								<th>总部结算计费时效</th>
+								<th>总部结算计费金额</th>
+								<th>账单号码</th>
+								<th>账单状态</th>
+								<th>扣费状态</th>
+								<th>运费</th>
+								<th>面单费</th>
+								<th>操作费</th>
+								<th>扶持派送费</th>
+								<th>附加费</th>
+								<th>计重费</th>
+								<th>超重派送费</th>
+								<th>价格类型</th>
+								<th>物料发放编码</th>
+								<th>物料发放名称</th>
+								<th>收件员代码</th>
+								<th>收件员名称</th>
+								<th>分部代码</th>
+								<th>分部名称</th>
+								<th>发件客户代码</th>
+								<th>发件客户名称</th>
+								<th>计费方式</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody id="wlkzmx-fund-details-body">
+							<tr>
+								<td colspan="40" style="text-align:center; padding: 20px; color: #666;">暂无物流开支明细数据</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<!-- 分页控件 -->
+				<div id="wlkzmx-fund-pagination" class="pagination">
+					<button id="wlkzmx-fund-prev-page" disabled>上一页</button>
+					<span class="pagination-info" id="wlkzmx-fund-page-info">第 1 页，共 1 页</span>
+					<button id="wlkzmx-fund-next-page" disabled>下一页</button>
+					<div class="page-jump">
+						<input type="number" id="wlkzmx-fund-jump-page" min="1" placeholder="页码">
+						<button id="wlkzmx-fund-jump-btn">跳转</button>
+					</div>
+				</div>
+			</div>
+			<!-- 赠品补发管理子面板 -->
+			<div class="platform-content" id="ZPBFMX-orders">
+				<!-- 赠品补发导入区域 -->
+				<div class="progress-container" id="gift-resend-progress-container" style="display: none; margin: 15px 0;">
+					<div class="progress-bar">
+						<div class="progress-fill" id="gift-resend-progress-fill" style="width: 0%;"></div>
+					</div>
+					<div class="progress-text" id="gift-resend-progress-text">0%</div>
+					<div class="progress-details" id="gift-resend-progress-details">正在准备导入...</div>
+				</div>
+				
+				<div class="import-section">
+					<p>支持导入赠品补发CSV或XLSX文件，包含订单号、客户昵称、收货地址、礼品名称等完整数据。</p>
+					<div class="import-top-row">
+						<div class="import-left-column">
+							<div class="file-input-wrapper">
+								<label for="gift-resend-file-import" class="file-label">选择赠品补发文件 (CSV/XLSX)</label>
+								<input type="file" id="gift-resend-file-import" accept=".csv,.xlsx,.xls">
+								<span class="file-name" id="gift-resend-file-name">未选择文件</span>
+							</div>
+							
+							<div class="action-buttons">
+								<button class="btn-success" id="gift-resend-import-btn" disabled>
+									<span>📥</span> 导入赠品补发数据
+								</button>
+								<button class="btn-warning" id="gift-resend-download-template">
+									<span>📋</span> 下载赠品补发模板
+								</button>
+							</div>
+						</div>
+						
+						<div class="import-right-column">
+							<div class="import-help" style="margin-top: 15px;">
+								<h4>赠品补发导入说明：</h4>
+								<ul>
+									<li>支持格式：CSV、XLSX、XLS</li>
+									<li>必需字段：订单号、客户昵称、礼品名称</li>
+									<li>日期格式：YYYY-MM-DD 或 YYYY/MM/DD</li>
+									<li>数量、金额字段会自动转换为数字类型</li>
+									<li>建议先下载模板查看数据格式</li>
+									<li>系统会自动识别并去重重复记录</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					
+					<div class="import-result" id="gift-resend-import-result">
+						<div id="gift-resend-import-result-text"></div>
+						<div class="import-errors" id="gift-resend-import-errors"></div>
+					</div>
+				</div>
+				
+				<!-- 赠品补发查询区域 -->
+				<div class="search-filters">
+					<h4>赠品补发查询</h4>
+					<div class="filter-row">
+						<div class="filter-group">
+							<label for="gift-resend-search-year">年度</label>
+							<select id="gift-resend-search-year">
+								<option value="">全部年度</option>
+								<option value="2024">2024年</option>
+								<option value="2023">2023年</option>
+								<option value="2022">2022年</option>
+								<option value="2021">2021年</option>
+							</select>
+						</div>
+						<div class="filter-group">
+							<label for="gift-resend-search-month">月份</label>
+							<select id="gift-resend-search-month">
+								<option value="">全部月份</option>
+								<option value="1">1月</option>
+								<option value="2">2月</option>
+								<option value="3">3月</option>
+								<option value="4">4月</option>
+								<option value="5">5月</option>
+								<option value="6">6月</option>
+								<option value="7">7月</option>
+								<option value="8">8月</option>
+								<option value="9">9月</option>
+								<option value="10">10月</option>
+								<option value="11">11月</option>
+								<option value="12">12月</option>
+							</select>
+						</div>
+						<div class="filter-group">
+							<label for="gift-resend-search-express-no">运单号码</label>
+							<input type="text" id="gift-resend-search-express-no" placeholder="输入运单号码">
+						</div>
+						<div class="filter-group">
+							<label for="gift-resend-search-customer">客户昵称</label>
+							<input type="text" id="gift-resend-search-customer" placeholder="输入客户昵称">
+						</div>
+					</div>
+					<div class="filter-row">
+						<div class="filter-group">
+							<label for="gift-resend-search-order-no">订单号</label>
+							<input type="text" id="gift-resend-search-order-no" placeholder="输入订单号">
+						</div>
+						<div class="filter-group">
+							<label for="gift-resend-search-gift-name">礼品名称</label>
+							<input type="text" id="gift-resend-search-gift-name" placeholder="输入礼品名称">
+						</div>
+						<div class="filter-group">
+							<label for="gift-resend-search-express-company">快递公司</label>
+							<input type="text" id="gift-resend-search-express-company" placeholder="输入快递公司">
+						</div>
+						<div class="filter-group">
+							<label for="gift-resend-search-color">颜色</label>
+							<input type="text" id="gift-resend-search-color" placeholder="输入颜色">
+						</div>
+					</div>
+					<div class="action-buttons">
+						<button id="gift-resend-search-btn" class="reset-btn">
+							<span>🔍</span> 查询
+						</button>
+						<button class="reset-btn" id="gift-resend-reset-search">
+							<span>🔄</span> 重置
+						</button>
+						<button class="export-btn" id="gift-resend-export-filtered">导出查询结果 (Excel)</button>
+						<button class="export-btn" id="gift-resend-export-all">导出所有记录 (Excel)</button>
+					</div>
+				</div>
+				
+				<!-- 赠品补发批量操作区域 -->
+				<div class="select-all-container">
+					<div class="select-all-options">
+						<div class="select-all-option">
+							<input type="checkbox" id="gift-resend-select-all-pages"> 
+							<label for="gift-resend-select-all-pages">全选所有页记录</label>
+						</div>
+						<div class="select-all-option">
+							<input type="checkbox" id="gift-resend-select-all"> 
+							<label for="gift-resend-select-all">全选当前页记录</label>
+						</div>
+						<span style="margin-left: 15px; color: #6c757d;">
+							已选择 <span id="gift-resend-selected-count">0</span> 条记录
+						</span>
+					</div>
+					<button class="bulk-delete-btn" id="gift-resend-bulk-delete-btn" disabled>
+						<span>🗑️</span> 批量删除选中记录
+					</button>
+				</div>
+				
+				<!-- 赠品补发表格 -->
+				<div class="records" style="overflow-x: auto;">
+					<table id="gift-resend-details-table">
+						<thead>
+							<tr>
+								<th width="40">
+									<input type="checkbox" id="gift-resend-table-select-all">
+								</th>
+								<th>订单号</th>
+								<th>客户昵称</th>
+								<th>收货地址</th>
+								<th>收货状态</th>
+								<th>礼品名称</th>
+								<th>颜色</th>
+								<th>数量</th>
+								<th>单件金额</th>
+								<th>总金额</th>
+								<th>快递公司</th>
+								<th>运单号</th>
+								<th>补发时间</th>
+								<th>快递费用</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody id="gift-resend-details-body">
+							<tr><td colspan="15" style="text-align:center">暂无赠品补发数据</td></tr>
+						</tbody>
+					</table>
+				</div>
+				
+				<!-- 赠品补发分页 -->
+				<div class="pagination" id="gift-resend-pagination">
+					<button id="gift-resend-prev-page" disabled>上一页</button>
+					<span class="pagination-info" id="gift-resend-page-info">第 1 页，共 1 页</span>
+					<button id="gift-resend-next-page" disabled>下一页</button>
+					<div class="page-jump">
+						<input type="number" id="gift-resend-jump-page" min="1" placeholder="页码" style="width: 60px; padding: 8px; text-align: center;">
+						<button id="gift-resend-jump-btn">跳转</button>
+					</div>
+				</div>
+			</div>
+			
+			<div class="platform-content" id="ZDZTHZ-orders">
+				<div class="summary-header">
+					<h3>店铺利润汇总</h3>
+					<p>基于聚水潭账单明细和店铺财务明细的利润分析</p>
+				</div>
+				
+				<!-- 查询筛选区域 -->
+				<div class="search-filters">
+					<h4>利润汇总查询</h4>
+					<div class="filter-row">
+						<div class="filter-group">
+							<label for="profit-search-year">年度</label>
+							<select id="profit-search-year">
+								<option value="">全部年度</option>
+								<option value="2024">2024年</option>
+								<option value="2023">2023年</option>
+								<option value="2022">2022年</option>
+								<option value="2021">2021年</option>
+							</select>
+						</div>
+						<div class="filter-group">
+							<label for="profit-search-month">月份</label>
+							<select id="profit-search-month">
+								<option value="">全部月份</option>
+								<option value="1">1月</option>
+								<option value="2">2月</option>
+								<option value="3">3月</option>
+								<option value="4">4月</option>
+								<option value="5">5月</option>
+								<option value="6">6月</option>
+								<option value="7">7月</option>
+								<option value="8">8月</option>
+								<option value="9">9月</option>
+								<option value="10">10月</option>
+								<option value="11">11月</option>
+								<option value="12">12月</option>
+							</select>
+						</div>
+						<div class="filter-group">
+							<label for="profit-search-shop">店铺选择</label>
+							<select id="profit-search-shop">
+								<option value="">全部店铺</option>
+								<!-- 店铺选项将动态生成 -->
+							</select>
+						</div>
+						<div class="filter-group">
+							<label for="profit-search-date-start">开始日期</label>
+							<input type="date" id="profit-search-date-start">
+						</div>
+						<div class="filter-group">
+							<label for="profit-search-date-end">结束日期</label>
+							<input type="date" id="profit-search-date-end">
+						</div>
+					</div>
+					<div class="filter-row">
+						<div class="filter-group">
+							<label>查询对象</label>
+							<div class="checkbox-group">
+								<label><input type="checkbox" name="profit-items" value="redpacket" checked> 红包</label>
+								<label><input type="checkbox" name="profit-items" value="service" checked> 服务费</label>
+								<label><input type="checkbox" name="profit-items" value="freight" checked> 运费险</label>
+								<label><input type="checkbox" name="profit-items" value="welfare" checked> 公益</label>
+								<label><input type="checkbox" name="profit-items" value="order" checked> 订单险</label>
+								<label><input type="checkbox" name="profit-items" value="compensation" checked> 投诉赔付</label>
+								<label><input type="checkbox" name="profit-items" value="small" checked> 小额打款</label>
+								<label><input type="checkbox" name="profit-items" value="refund" checked> 退费/补偿</label>
+								<label><input type="checkbox" name="profit-items" value="sales" checked> 成交销售额</label>
+								<label><input type="checkbox" name="profit-items" value="cost" checked> 成交销售成本</label>
+								<label><input type="checkbox" name="profit-items" value="profit" checked> 销售毛利</label>
+							</div>
+						</div>
+					</div>
+					<div class="action-buttons">
+						<button id="profit-search-btn" class="reset-btn">
+							<span>🔍</span> 查询
+						</button>
+						<button class="reset-btn" id="profit-reset-search">
+							<span>🔄</span> 重置
+						</button>
+						<button class="export-btn" id="profit-export-summary">导出汇总结果</button>
+					</div>
+				</div>
+				
+				<!-- 利润汇总结果 -->
+				<div class="profit-summary-results">
+					<h4>利润汇总结果</h4>
+					<div class="summary-cards">
+						<div class="summary-card">
+							<div class="card-icon">💰</div>
+							<div class="card-content">
+								<div class="card-value" id="total-redpacket">¥0.00</div>
+								<div class="card-label">红包总额</div>
+							</div>
+						</div>
+						<div class="summary-card">
+							<div class="card-icon">💼</div>
+							<div class="card-content">
+								<div class="card-value" id="total-service">¥0.00</div>
+								<div class="card-label">服务费总额</div>
+							</div>
+						</div>
+						<div class="summary-card">
+							<div class="card-icon">📦</div>
+							<div class="card-content">
+								<div class="card-value" id="total-freight">¥0.00</div>
+								<div class="card-label">运费险总额</div>
+							</div>
+						</div>
+						<div class="summary-card">
+							<div class="card-icon">❤️</div>
+							<div class="card-content">
+								<div class="card-value" id="total-welfare">¥0.00</div>
+								<div class="card-label">公益总额</div>
+							</div>
+						</div>
+						<div class="summary-card">
+							<div class="card-icon">🛡️</div>
+							<div class="card-content">
+								<div class="card-value" id="total-order">¥0.00</div>
+								<div class="card-label">订单险总额</div>
+							</div>
+						</div>
+						<div class="summary-card">
+							<div class="card-icon">⚖️</div>
+							<div class="card-content">
+								<div class="card-value" id="total-compensation">¥0.00</div>
+								<div class="card-label">投诉赔付总额</div>
+							</div>
+						</div>
+						<div class="summary-card">
+							<div class="card-icon">💸</div>
+							<div class="card-content">
+								<div class="card-value" id="total-small">¥0.00</div>
+								<div class="card-label">小额打款总额</div>
+							</div>
+						</div>
+						<div class="summary-card">
+							<div class="card-icon">🔄</div>
+							<div class="card-content">
+								<div class="card-value" id="total-refund">¥0.00</div>
+								<div class="card-label">退费/补偿总额</div>
+							</div>
+						</div>
+						<div class="summary-card">
+							<div class="card-icon">📈</div>
+							<div class="card-content">
+								<div class="card-value" id="total-sales">¥0.00</div>
+								<div class="card-label">成交销售额</div>
+							</div>
+						</div>
+						<div class="summary-card">
+							<div class="card-icon">📉</div>
+							<div class="card-content">
+								<div class="card-value" id="total-cost">¥0.00</div>
+								<div class="card-label">成交销售成本</div>
+							</div>
+						</div>
+						<div class="summary-card">
+							<div class="card-icon">💹</div>
+							<div class="card-content">
+								<div class="card-value" id="total-profit">¥0.00</div>
+								<div class="card-label">销售毛利</div>
+							</div>
+						</div>
+						<div class="summary-card">
+							<div class="card-icon">📊</div>
+							<div class="card-content">
+								<div class="card-value" id="net-profit">¥0.00</div>
+								<div class="card-label">净利润</div>
+							</div>
+						</div>
+					</div>
+					
+					<!-- 利润汇总表格 -->
+					<div class="summary-table-container">
+						<h4>详细利润汇总</h4>
+						<div class="table-responsive">
+							<table id="profit-summary-table" class="summary-table">
+								<thead>
+									<tr>
+										<th>店铺</th>
+										<th>红包</th>
+										<th>服务费</th>
+										<th>运费险</th>
+										<th>公益</th>
+										<th>订单险</th>
+										<th>投诉赔付</th>
+										<th>小额打款</th>
+										<th>退费/补偿</th>
+										<th>成交销售额</th>
+										<th>成交销售成本</th>
+										<th>销售毛利</th>
+										<th>净利润</th>
+									</tr>
+								</thead>
+								<tbody id="profit-summary-body">
+									<!-- 利润汇总数据将在这里动态生成 -->
+								</tbody>
+								<tfoot>
+									<tr class="summary-total">
+										<td>总计</td>
+										<td id="total-redpacket-foot">¥0.00</td>
+										<td id="total-service-foot">¥0.00</td>
+										<td id="total-freight-foot">¥0.00</td>
+										<td id="total-welfare-foot">¥0.00</td>
+										<td id="total-order-foot">¥0.00</td>
+										<td id="total-compensation-foot">¥0.00</td>
+										<td id="total-small-foot">¥0.00</td>
+										<td id="total-refund-foot">¥0.00</td>
+										<td id="total-sales-foot">¥0.00</td>
+										<td id="total-cost-foot">¥0.00</td>
+										<td id="total-profit-foot">¥0.00</td>
+										<td id="net-profit-foot">¥0.00</td>
+									</tr>
+								</tfoot>
+							</table>
+						</div>
+					</div>
+					
+					<!-- 利润分析图表 -->
+					<div class="profit-charts">
+						<h4>利润分析图表</h4>
+						<div class="chart-row">
+							<div class="chart-container">
+								<h5>费用构成分析</h5>
+								<canvas id="profit-expense-chart"></canvas>
+							</div>
+							<div class="chart-container">
+								<h5>利润对比分析</h5>
+								<canvas id="profit-comparison-chart"></canvas>
+							</div>
+						</div>
+						<div class="chart-row">
+							<div class="chart-container">
+								<h5>月度利润趋势</h5>
+								<canvas id="profit-trend-chart"></canvas>
+							</div>
+							<div class="chart-container">
+								<h5>店铺利润分布</h5>
+								<canvas id="profit-distribution-chart"></canvas>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		<!-- 账号管理面板 -->
+        <div class="tab-content" id="account-management">
+            <div class="account-section">
+                <!-- 账号信息和备份恢复并排布局 -->
+                <div class="import-top-row">
+                    <!-- 账号信息列 -->
+                    <div class="import-left-column">
+                        <div class="account-info">
+                            <h3>账号信息</h3>
+                            <p><strong>用户名：</strong> <span id="account-username">-</span></p>
+                            <p><strong>收支总数：</strong> <span id="account-record-count">0</span> 条</p>
+							<p><strong>微信总数：</strong> <span id="WeCht-record-count">0</span> 条</p>
+							<p><strong>支付宝总数：</strong> <span id="Alipay-record-count">0</span> 条</p>
+							<p><strong>淘宝订单总数：</strong> <span id="TaoBao-record-count">0</span> 条</p>
+							<p><strong>快手订单总数：</strong> <span id="kuaishou-record-count">0</span> 条</p>
+							<p><strong>抖音订单总数：</strong> <span id="DouYin-record-count">0</span> 条</p>
+							<p><strong>视频号订单总数：</strong> <span id="ShiPingHao-record-count">0</span> 条</p>
+							<p><strong>小红书订单总数：</strong> <span id="XiaoHongShu-record-count">0</span> 条</p>
+							<p><strong>直播记录场次总数：</strong> <span id="live-records-count">0</span> 条</p>
+                            <p><strong>注册时间：</strong> <span id="account-reg-time">-</span></p>
+							<p><strong>最后更新时间：</strong> <span id="last-update-time">-</span></p>
+                        </div>
+						
+						
+						<div class="storage-controls">
+							<h3>💾 存储空间管理</h3>
+							<button class="refresh-btn" id="refresh-storage-stats">
+								🔄 刷新数据统计
+							</button>
+							<button class="export-btn" id="check-database-size">
+								📊 检查数据库大小
+							</button>
+						</div>
+                    </div>
+                
+					<div class="import-right-column">
+
+
+						<div class="cleanup-actions">
+							<h4>数据清理选项：</h4>
+							
+							<div class="cleanup-option">
+								<button class="cleanup-btn" id="cleanup-old-wechat">
+									清理6个月前的微信账单
+								</button>
+								<span class="cleanup-desc">保留最近6个月的微信账单数据</span>
+							</div>
+							
+							<div class="cleanup-option">
+								<button class="cleanup-btn" id="cleanup-old-alipay">
+									清理6个月前的支付宝账单
+								</button>
+								<span class="cleanup-desc">保留最近6个月的支付宝账单数据</span>
+							</div>
+							
+							<div class="cleanup-option">
+								<button class="cleanup-btn" id="cleanup-all-bills">
+									清理所有账单数据
+								</button>
+								<span class="cleanup-desc">删除所有微信和支付宝账单（不影响收支记录）</span>
+							</div>
+							
+							<div class="cleanup-option">
+								<button class="cleanup-btn danger" id="cleanup-all-data">
+									清理所有数据
+								</button>
+								<span class="cleanup-desc">删除所有数据，包括收支记录和账单（谨慎使用）</span>
+							</div>
+						</div>
+					</div>
+				</div>
+					<div class="delete-warning">
+						<h4>⚠️ 警告：</h4>
+						<p>清理操作不可恢复，请务必先备份重要数据！</p>
+					</div>
+
+				<!-- ===== 新增部分结束 ===== -->
+                <!-- 修改密码部分 -->
+                <div class="account-actions">
+					<div class="import-top-row">
+						<div class="import-left-column">
+							<div class="account-info">
+								<h3>修改密码</h3>
+								<form id="account-change-password-form">
+									<div class="form-group">
+										<label for="account-old-password">原密码</label>
+										<div class="password-input-wrapper">
+											<input type="password" id="account-old-password" required>
+											<span class="toggle-password" data-target="account-old-password">👁</span>
+										</div>
+										<div class="error-message" id="account-old-error">请输入原密码</div>
+									</div>
+									<div class="form-group">
+										<label for="account-new-password">新密码</label>
+										<div class="password-input-wrapper">
+											<input type="password" id="account-new-password" required>
+											<span class="toggle-password" data-target="account-new-password">👁</span>
+										</div>
+										<div class="error-message" id="account-new-error">请输入6-20位新密码</div>
+									</div>
+									<div class="form-group">
+										<label for="account-confirm-password">确认新密码</label>
+										<div class="password-input-wrapper">
+											<input type="password" id="account-confirm-password" required>
+											<span class="toggle-password" data-target="account-confirm-password">👁</span>
+										</div>
+										<div class="error-message" id="account-confirm-error">两次密码不一致</div>
+									</div>
+									<div class="error-message" id="account-password-error"></div>
+									<button type="submit">确认修改</button>
+								</form>
+							</div>
+						</div>
+						<div class="import-right-column">
+							<div class="account-info">
+							<h3>注销账号</h3>
+								<form id="account-delete-form">
+									<div class="form-group">
+										<label for="delete-confirm-username">请输入用户名确认</label>
+										<input type="text" id="delete-confirm-username" required>
+										<div class="error-message" id="delete-username-error">用户名输入不正确</div>
+									</div>
+									<div class="form-group">
+										<label for="delete-confirm-password">请输入密码确认</label>
+										<input type="password" id="delete-confirm-password" required>
+										<div class="error-message" id="delete-password-error">密码输入不正确</div>
+									</div>
+									<div class="form-group">
+										<label for="delete-confirm-password">请再次确认密码</label>
+										<input type="password" id="delete-confirm-password" required>
+										<div class="error-message" id="delete-password-error">密码输入不正确</div>
+									</div>
+									<button type="submit" class="account-delete-btn">确认注销账号</button>
+								</form>
+							</div>
+						</div>
+					</div>
+                </div>
+                <!-- 注销账号部分 -->
+                <div class="account-actions">
+                    <div class="delete-warning">
+                        <h4>警告：</h4>
+                        <p>注销账号将永久删除以下数据，且无法恢复：</p>
+                        <ul>
+                            <li>您的账号信息</li>
+                            <li>所有收支记录</li>
+                            <li>所有收支统计数据</li>
+                        </ul>
+                        <p>建议先导出您的记录备份，再进行注销操作。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
